@@ -1,6 +1,7 @@
-pragma solidity 0.8.13;
+pragma solidity 0.8.14;
 
-import "../interfaces/IERC1155.sol";
+import "../interfaces/IERC1155.sol"; // not using open zep as ERC165 is already built into diamond
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import 'hardhat/console.sol';
@@ -160,12 +161,12 @@ contract UsernameFacet is IERC1155, Modifiers {
     AppStorage storage s = LibAppStorage.diamondStorage();
     (bool valid, uint8 length) = testString(username);
     require(valid, "UsernameFacet::Invalid Username, please only use 0-9 and a-z (no caps)");
+    if (length > 8) {
+      length = 8;
+    }
+    uint cost = s.usernameCostTable[length];
 
-		// bytes(username).length does not always return chars in username
-		// https://medium.com/hackernoon/working-with-strings-in-solidity-c4ff6d5f8008
-		// pass str length
-    console.log((username));
-    console.log(bytes(username).length);
+
 	}
 
   function testString(string memory letter) internal returns (bool, uint8) {
@@ -188,6 +189,6 @@ contract UsernameFacet is IERC1155, Modifiers {
 
   function setUsernameCost(uint8 length, uint256 cost) external onlyOwner {
     AppStorage storage s = LibAppStorage.diamondStorage();
-
+    s.usernameCostTable[length] = cost;
   }
 }

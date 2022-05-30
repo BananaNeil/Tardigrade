@@ -23,7 +23,12 @@ import '@nomiclabs/hardhat-ethers'
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: '0.8.13',
+  solidity: {
+    compilers: [
+      { version: '0.8.14' },
+      { version: '0.7.5' }
+    ]
+  },
   settings: {
     optimizer: {
       enabled: true,

@@ -25,7 +25,8 @@ contract DiamondInit {
   // data to set your own state variables
   function init(
     uint256[8] calldata usernameCostTable,
-    string calldata uri
+    string calldata uri,
+    address caw
   ) external {
     // adding ERC165 data
     LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
@@ -45,6 +46,7 @@ contract DiamondInit {
     for (uint8 i = 1; i < usernameCostTable.length; i++) {
       s.usernameCostTable[i] = usernameCostTable[i];
     }
+    s.caw = caw;
   }
 
 

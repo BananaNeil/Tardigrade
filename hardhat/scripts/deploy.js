@@ -7,6 +7,18 @@ async function deployDiamond () {
   const accounts = await ethers.getSigners()
   const contractOwner = accounts[0]
 
+  //Pre-deploy Mock CAW
+  // Caw was likely deployed via https://www.smartcontracts.tools/token-generator/docs/
+  // requires a 'service receiver', i believe this took 0.35 eth or something as a fee for creating with tool
+  const ServiceReceiver = await ethers.getContractFactory('ServiceReceiver')
+  const serviceReceiver = await ServiceReceiver.deploy()
+  await serviceReceiver.deployed()
+
+  const CAW = await ethers.getContractFactory('StandardERC20')
+  const caw = await CAW.deploy('cawmock', 'mCAW', 18, ethers.utils.parseEther('666666666666666'), serviceReceiver.address)
+  await caw.deployed()
+  console.log('Mock Caw Deployed: ', caw.address)
+
   // deploy DiamondCutFacet
   const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet')
   const diamondCutFacet = await DiamondCutFacet.deploy()
@@ -69,7 +81,8 @@ async function deployDiamond () {
   })
   const initVars = [
     userNamePrices,
-    'https://example.uri.com'
+    'https://example.uri.com',
+    caw.address
   ]
   let functionCall = diamondInit.interface.encodeFunctionData('init', initVars)
   tx = await diamondCut.diamondCut(cut, diamondInit.address, functionCall)
