@@ -47,7 +47,7 @@ describe('Cache bug test', async () => {
       sel10
     ]
 
-    let diamondAddress = await deployDiamond()
+    let {diamond:diamondAddress,caw:cawAddress} = await deployDiamond()
     let diamondCutFacet = await ethers.getContractAt('DiamondCutFacet', diamondAddress)
     diamondLoupeFacet = await ethers.getContractAt('DiamondLoupeFacet', diamondAddress)
     const Test1Facet = await ethers.getContractFactory('Test1Facet')

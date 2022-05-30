@@ -92,7 +92,10 @@ async function deployDiamond () {
     throw Error(`Diamond upgrade failed: ${tx.hash}`)
   }
   console.log('Completed diamond cut')
-  return diamond.address
+  return {
+    'diamond': diamond.address,
+    'caw': caw.address,
+  }
 }
 
 // We recommend this pattern to be able to use async/await everywhere

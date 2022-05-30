@@ -6,6 +6,8 @@ import {LibDiamond} from './LibDiamond.sol';
 struct AppStorage {
   address caw;
   mapping(uint8 => uint256) usernameCostTable;
+  mapping(string => bool) createdUsernames;
+  uint256 nextNftId;
   mapping(uint256 => mapping(address => uint256)) nftBalances;
   mapping(address => mapping(address => bool)) operatorApprovals;
   string uri;

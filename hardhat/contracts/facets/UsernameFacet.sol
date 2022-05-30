@@ -8,19 +8,19 @@ import 'hardhat/console.sol';
 
 import { LibAppStorage, AppStorage, Modifiers } from '../libraries/LibAppStorage.sol';
 contract UsernameFacet is IERC1155, Modifiers {
-  using Address for address;
+	using Address for address;
 
 	bytes4 internal constant ERC1155_ACCEPTED = 0xf23a6e61; // Return value from `onERC1155Received` call if a contract accepts receipt (i.e `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`).
 	bytes4 internal constant ERC1155_BATCH_ACCEPTED = 0xbc197c81; // Return value from `onERC1155BatchReceived` call if a contract accepts receipt (i.e `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`).
 
 	function balanceOf(address account, uint256 id) external view returns (uint256) {
-    AppStorage storage s = LibAppStorage.diamondStorage();
+		AppStorage storage s = LibAppStorage.diamondStorage();
 		require (account != address(0), "ERC1155: burn addr not a valid owner");
 		return s.nftBalances[id][account];
 	}
 
 	function balanceOfBatch(address[] memory accounts, uint256[] memory ids) external view returns (uint256[] memory) {
-    AppStorage storage s = LibAppStorage.diamondStorage();
+		AppStorage storage s = LibAppStorage.diamondStorage();
 		require(accounts.length == ids.length, "ERC1155: accounts and ids length mismatch");
 		uint256[] memory batchBalances = new uint256[](accounts.length);
 		for (uint256 i = 0; i < accounts.length; ++i) {
@@ -31,14 +31,14 @@ contract UsernameFacet is IERC1155, Modifiers {
 	}
 
 	function setApprovalForAll(address operator, bool approved) external {
-    AppStorage storage s = LibAppStorage.diamondStorage();
+		AppStorage storage s = LibAppStorage.diamondStorage();
 		require(msg.sender != operator, "ERC1155: setting approval status for self");
 		s.operatorApprovals[msg.sender][operator] = approved;
 		emit ApprovalForAll(msg.sender, operator, approved); 
 	}
 
 	function isApprovedForAll(address account, address operator) public view virtual override returns (bool) {
-    AppStorage storage s = LibAppStorage.diamondStorage();
+		AppStorage storage s = LibAppStorage.diamondStorage();
 		return s.operatorApprovals[account][operator];
 	}
 
@@ -49,7 +49,7 @@ contract UsernameFacet is IERC1155, Modifiers {
 		uint256 amount,
 		bytes memory data
 	) external  {
-    AppStorage storage s = LibAppStorage.diamondStorage();
+		AppStorage storage s = LibAppStorage.diamondStorage();
 		require(
 			from == msg.sender || isApprovedForAll(from, msg.sender),
 			"ERC1155: caller is not token owner nor approved"
@@ -59,9 +59,9 @@ contract UsernameFacet is IERC1155, Modifiers {
 		address operator = msg.sender;
 
 		uint256[] memory ids = new uint256[](1);
-    ids[0] = id;
+		ids[0] = id;
 		uint256[] memory amounts = new uint256[](1);
-    amounts[0] = amount;
+		amounts[0] = amount;
 
 
 		uint256 fromBalance = s.nftBalances[id][from];
@@ -83,7 +83,7 @@ contract UsernameFacet is IERC1155, Modifiers {
 		uint256[] memory amounts,
 		bytes memory data
 	) external {
-    AppStorage storage s = LibAppStorage.diamondStorage();
+		AppStorage storage s = LibAppStorage.diamondStorage();
 		require(
 			from == msg.sender || isApprovedForAll(from, msg.sender),
 			"ERC1155: caller is not token owner nor approved"
@@ -156,39 +156,63 @@ contract UsernameFacet is IERC1155, Modifiers {
 		}
 	}
 
+	function _mint(
+		address to,
+		uint256 id,
+		uint256 amount,
+		bytes memory data
+	) internal {
+		require(to != address(0), "ERC1155: mint to the zero address");
 
-	function createUser(uint256 caw, string memory username) external {
-    AppStorage storage s = LibAppStorage.diamondStorage();
-    (bool valid, uint8 length) = testString(username);
-    require(valid, "UsernameFacet::Invalid Username, please only use 0-9 and a-z (no caps)");
-    if (length > 8) {
-      length = 8;
-    }
-    uint cost = s.usernameCostTable[length];
+		address operator = msg.sender;
+		uint256[] memory ids = new uint256[](1);
+		ids[0] = id;
+		uint256[] memory amounts = new uint256[](1);
+		amounts[0] = amount;
 
+		s.nftBalances[id][to] += amount;
+		emit TransferSingle(operator, address(0), to, id, amount);
 
+		_doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
 	}
 
-  function testString(string memory letter) internal returns (bool, uint8) {
-    bytes memory bytesLetter = bytes(letter);
-    uint8 letterAmount = 0;
-    for (uint i; i < bytesLetter.length; i++) {
-      bytes1 char = bytesLetter[i];
-      if (char >= 0x30 && char <= 0x39) {
-        // 0-9
-        letterAmount++;
-      } else if (char >= 0x61 && char <=0x7A) {
-        // a-z
-        letterAmount++;
-      } else {
-        return (false, 0);
-      }
-    }
-    return (true, letterAmount);
-  }
 
-  function setUsernameCost(uint8 length, uint256 cost) external onlyOwner {
-    AppStorage storage s = LibAppStorage.diamondStorage();
-    s.usernameCostTable[length] = cost;
-  }
+	function createUser(string memory username) external {
+		AppStorage storage s = LibAppStorage.diamondStorage();
+		bool available = s.createdUsernames[username];
+		(bool valid, uint8 length) = testString(username);
+		require(valid, "UsernameFacet::Invalid Username, please only use 0-9 and a-z (no caps)");
+		require(available, "UsernameFacet::Username Taken already");
+		if (length > 8) {
+			length = 8;
+		}
+		uint cost = s.usernameCostTable[length];
+		IERC20(s.caw).transferFrom(msg.sender, address(0), cost);
+		s.createdUsernames[username] = true;
+		_mint(msg.sender, s.nextNftId, 1, bytes(username));
+		s.nextNftId++;
+	}
+
+	function testString(string memory letter) internal returns (bool, uint8) {
+		bytes memory bytesLetter = bytes(letter);
+		uint8 letterAmount = 0;
+		for (uint i; i < bytesLetter.length; i++) {
+			bytes1 char = bytesLetter[i];
+			if (char >= 0x30 && char <= 0x39) {
+				// 0-9
+				letterAmount++;
+			} else if (char >= 0x61 && char <=0x7A) {
+				// a-z
+				letterAmount++;
+			} else {
+				return (false, 0);
+			}
+		}
+		return (true, letterAmount);
+	}
+
+	function setUsernameCost(uint8 length, uint256 cost) external onlyOwner {
+		AppStorage storage s = LibAppStorage.diamondStorage();
+		s.usernameCostTable[length] = cost;
+	}
 }
