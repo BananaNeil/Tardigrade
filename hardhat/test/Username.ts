@@ -26,7 +26,7 @@ describe("UsernameFacet", function () {
     // Do something with the accounts
     const oneCaw = ethers.utils.parseEther('1')
     console.log(oneCaw)
-    const creatUser = await usernameFacet.createUser(oneCaw, 'th', 2)
+    const createUser = await usernameFacet.createUser(oneCaw, 'joemcgee')
     
   });
 });

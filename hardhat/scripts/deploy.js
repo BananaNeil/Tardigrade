@@ -55,8 +55,20 @@ async function deployDiamond () {
   let tx
   let receipt
   // call to init function
+  const userNamePrices = [
+    1000000000000,
+    240000000000,
+    60000000000,
+    6000000000,
+    200000000,
+    20000000,
+    10000000,
+    1000000
+  ].map((eth) => {
+    return ethers.utils.parseEther(eth.toString())
+  })
   const initVars = [
-    [1],
+    userNamePrices,
     'https://example.uri.com'
   ]
   let functionCall = diamondInit.interface.encodeFunctionData('init', initVars)

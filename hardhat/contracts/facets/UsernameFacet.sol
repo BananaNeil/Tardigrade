@@ -3,6 +3,7 @@ pragma solidity 0.8.13;
 import "../interfaces/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
+import 'hardhat/console.sol';
 
 import { LibAppStorage, AppStorage, Modifiers } from '../libraries/LibAppStorage.sol';
 contract UsernameFacet is IERC1155, Modifiers {
@@ -155,11 +156,38 @@ contract UsernameFacet is IERC1155, Modifiers {
 	}
 
 
-	function createUser(uint256 caw, string memory username, uint8 strLength) external {
+	function createUser(uint256 caw, string memory username) external {
     AppStorage storage s = LibAppStorage.diamondStorage();
+    (bool valid, uint8 length) = testString(username);
+    require(valid, "UsernameFacet::Invalid Username, please only use 0-9 and a-z (no caps)");
+
 		// bytes(username).length does not always return chars in username
 		// https://medium.com/hackernoon/working-with-strings-in-solidity-c4ff6d5f8008
 		// pass str length
-
+    console.log((username));
+    console.log(bytes(username).length);
 	}
+
+  function testString(string memory letter) internal returns (bool, uint8) {
+    bytes memory bytesLetter = bytes(letter);
+    uint8 letterAmount = 0;
+    for (uint i; i < bytesLetter.length; i++) {
+      bytes1 char = bytesLetter[i];
+      if (char >= 0x30 && char <= 0x39) {
+        // 0-9
+        letterAmount++;
+      } else if (char >= 0x61 && char <=0x7A) {
+        // a-z
+        letterAmount++;
+      } else {
+        return (false, 0);
+      }
+    }
+    return (true, letterAmount);
+  }
+
+  function setUsernameCost(uint8 length, uint256 cost) external onlyOwner {
+    AppStorage storage s = LibAppStorage.diamondStorage();
+
+  }
 }
