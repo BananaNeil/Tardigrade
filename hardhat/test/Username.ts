@@ -49,9 +49,17 @@ describe("UsernameFacet", function () {
 
     const joeBalance2 = await cawToken.balanceOf(accounts[1].address)
 
-    console.log(joeBalance1.sub(joeBalance2))
-    console.log('usernameCost', usernameCost)
     expect(joeBalance1.sub(joeBalance2)).to.equal(usernameCost)
+
+    const usernameNft = await usernameFacet.balanceOf(accounts[1].address, 0)
+    expect(usernameNft).to.equal(1)
+    
+    const nftIdFromUsername = await usernameFacet.getNftIdByUsername(username)
+    expect(nftIdFromUsername).to.equal(0)
+
+    const usernameFromNftId = await usernameFacet.getUsernameByNftId(0)
+    expect(usernameFromNftId).to.equal(username)
+
 
   });
 });

@@ -177,18 +177,19 @@ contract UsernameFacet is IERC1155, Modifiers {
 
 	function createUser(string memory username) external {
 		AppStorage storage s = LibAppStorage.diamondStorage();
-		bool taken = s.createdUsernames[username];
+		uint256 taken = s.usernameToNftId[username];
 		(bool valid, uint8 length) = testString(username);
 		require(valid, "UsernameFacet::Invalid Username, please only use 0-9 and a-z (no caps)");
-		require(!taken, "UsernameFacet::Username Taken already");
+		require(taken == 0, "UsernameFacet::Username Taken already");
 		if (length > 8) {
 			length = 8;
 		}
 		uint cost = s.usernameCostTable[length - 1]; 
     console.log('cost', cost);
 		IERC20(s.caw).transferFrom(msg.sender, s.burn, cost);
-		s.createdUsernames[username] = true;
 		_mint(msg.sender, s.nextNftId, 1, bytes(username));
+		s.usernameToNftId[username] = s.nextNftId;
+    s.nftIdToUsername[s.nextNftId] = username;
 		s.nextNftId++;
 	}
 
@@ -222,6 +223,15 @@ contract UsernameFacet is IERC1155, Modifiers {
 			length = 8;
 		}
     return s.usernameCostTable[length - 1];
+  }
 
+  function getUsernameByNftId(uint256 id) external view returns (string memory) {
+		AppStorage storage s = LibAppStorage.diamondStorage();
+    return s.nftIdToUsername[id];
+  }
+
+  function getNftIdByUsername(string memory username) external view returns (uint256) {
+		AppStorage storage s = LibAppStorage.diamondStorage();
+    return s.usernameToNftId[username];
   }
 }
