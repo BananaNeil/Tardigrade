@@ -235,4 +235,6 @@ contract UsernameFacet is IERC1155, Modifiers {
 		AppStorage storage s = LibAppStorage.diamondStorage();
     return s.usernameToNftId[username];
   }
+
+
 }

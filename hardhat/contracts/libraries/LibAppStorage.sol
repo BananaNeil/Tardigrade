@@ -2,15 +2,11 @@ pragma solidity ^0.8.0;
 
 import {LibDiamond} from './LibDiamond.sol';
 
-struct Account {
-  string username;
-  uint256 nftid;
-
-}
 
 struct AppStorage {
   address burn;
   address caw;
+  // username nft associated state
   mapping(uint256 => uint256) usernameCostTable;
   mapping(string => uint256) usernameToNftId;
   mapping(uint256 => string) nftIdToUsername;
@@ -18,6 +14,9 @@ struct AppStorage {
   mapping(uint256 => mapping(address => uint256)) nftBalances;
   mapping(address => mapping(address => bool)) operatorApprovals;
   string uri;
+  // signature sends
+  // nftid => nonce => true
+  mapping(uint256 => mapping(uint256 => bool)) nftUsedNonces;
 }
 
 library LibAppStorage {
