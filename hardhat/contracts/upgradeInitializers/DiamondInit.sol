@@ -47,6 +47,7 @@ contract DiamondInit {
       s.usernameCostTable[i] = usernameCostTable[i];
     }
     s.caw = caw;
+    s.burn = 0x000000000000000000000000000000000000dEaD; //zero address was prevent Transfer in ERC20Standard token
   }
 
 

@@ -13,6 +13,7 @@ const { assert } = require('chai')
 
 describe('DiamondTest', async function () {
   let diamondAddress
+  let cawAddress
   let diamondCutFacet
   let diamondLoupeFacet
   let ownershipFacet
@@ -23,7 +24,9 @@ describe('DiamondTest', async function () {
   const addresses = []
 
   before(async function () {
-    diamondAddress = await deployDiamond()
+    
+    ;({diamond: diamondAddress, caw:cawAddress} = await deployDiamond())
+    console.log('dia addr', diamondAddress)
     diamondCutFacet = await ethers.getContractAt('DiamondCutFacet', diamondAddress)
     diamondLoupeFacet = await ethers.getContractAt('DiamondLoupeFacet', diamondAddress)
     ownershipFacet = await ethers.getContractAt('OwnershipFacet', diamondAddress)

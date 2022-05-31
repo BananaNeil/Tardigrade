@@ -15,6 +15,7 @@ const { assert } = require('chai')
 describe('Cache bug test', async () => {
   let diamondLoupeFacet
   let test1Facet
+  let diamondAddress
   const ownerSel = '0x8da5cb5b'
 
   const sel0 = '0x19e3b533' // fills up slot 1
@@ -47,7 +48,7 @@ describe('Cache bug test', async () => {
       sel10
     ]
 
-    let {diamond:diamondAddress,caw:cawAddress} = await deployDiamond()
+    ;({diamond: diamondAddress, caw:cawAddress} = await deployDiamond())
     let diamondCutFacet = await ethers.getContractAt('DiamondCutFacet', diamondAddress)
     diamondLoupeFacet = await ethers.getContractAt('DiamondLoupeFacet', diamondAddress)
     const Test1Facet = await ethers.getContractFactory('Test1Facet')

@@ -1,5 +1,9 @@
 import { ethers } from "hardhat";
-import { Signer, BigNumber } from "ethers";
+import { BigNumber, Signer } from "ethers";
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
+const { expect } = require('chai')
+
+const burnAddress ='0x000000000000000000000000000000000000dEaD'
 
 const {
   getSelectors,
@@ -10,30 +14,44 @@ const {
 
 const { deployDiamond } = require('../scripts/deploy.js')
 
-const { assert } = require('chai')
 describe("UsernameFacet", function () {
-  let accounts: Signer[];
-  let diamondAddress:any
-  let cawAddress:any
-  
+  let accounts: SignerWithAddress[]
+  let diamondAddress: string
+  let cawAddress: string
+
   let cawToken:any
   let usernameFacet:any
   before(async () => {
     accounts = await ethers.getSigners();
-    const {diamond: diamondAddress, caw:cawAddress} = await deployDiamond()
+    ;({diamond: diamondAddress, caw:cawAddress} = await deployDiamond())
     cawToken = await ethers.getContractAt('StandardERC20', cawAddress)
     usernameFacet = await ethers.getContractAt('UsernameFacet', diamondAddress, accounts[0])
-    console.log(usernameFacet)
 
     //Mint and distribute Caw
+    Promise.all(
+      accounts.map(async (account) => {
+        await cawToken.transfer(account.address,  ethers.utils.parseEther('1000000000'))
+      })
+    )
   })
 
   it("burns caw to mint NFT", async () => {
+    console.log('===================================')
     // Do something with the accounts
-    const oneCaw = ethers.utils.parseEther('1')
-    console.log(oneCaw)
-    const approve = await cawToken.connect(accounts[1]).approve(diamondAddress, ethers.utils.parseEther('1000000000000'))
-    const createUser = await usernameFacet.createUser('joemcgee')
-    
+    const millionCaw = ethers.utils.parseEther('1000000')
+    const approve = await cawToken.connect(accounts[1]).approve(diamondAddress, millionCaw)
+
+    const username = 'joemcgee'
+    const usernameCost = await usernameFacet.connect(accounts[1]).getUsernameCost(username.length)
+    const joeBalance1 = await cawToken.balanceOf(accounts[1].address)
+
+    const createUser = await usernameFacet.connect(accounts[1]).createUser(username)
+
+    const joeBalance2 = await cawToken.balanceOf(accounts[1].address)
+
+    console.log(joeBalance1.sub(joeBalance2))
+    console.log('usernameCost', usernameCost)
+    expect(joeBalance1.sub(joeBalance2)).to.equal(usernameCost)
+
   });
 });

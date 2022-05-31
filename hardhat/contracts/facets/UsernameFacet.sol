@@ -10,8 +10,6 @@ import { LibAppStorage, AppStorage, Modifiers } from '../libraries/LibAppStorage
 contract UsernameFacet is IERC1155, Modifiers {
 	using Address for address;
 
-	bytes4 internal constant ERC1155_ACCEPTED = 0xf23a6e61; // Return value from `onERC1155Received` call if a contract accepts receipt (i.e `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`).
-	bytes4 internal constant ERC1155_BATCH_ACCEPTED = 0xbc197c81; // Return value from `onERC1155BatchReceived` call if a contract accepts receipt (i.e `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`).
 
 	function balanceOf(address account, uint256 id) external view returns (uint256) {
 		AppStorage storage s = LibAppStorage.diamondStorage();
@@ -179,15 +177,16 @@ contract UsernameFacet is IERC1155, Modifiers {
 
 	function createUser(string memory username) external {
 		AppStorage storage s = LibAppStorage.diamondStorage();
-		bool available = s.createdUsernames[username];
+		bool taken = s.createdUsernames[username];
 		(bool valid, uint8 length) = testString(username);
 		require(valid, "UsernameFacet::Invalid Username, please only use 0-9 and a-z (no caps)");
-		require(available, "UsernameFacet::Username Taken already");
+		require(!taken, "UsernameFacet::Username Taken already");
 		if (length > 8) {
 			length = 8;
 		}
-		uint cost = s.usernameCostTable[length];
-		IERC20(s.caw).transferFrom(msg.sender, address(0), cost);
+		uint cost = s.usernameCostTable[length - 1]; 
+    console.log('cost', cost);
+		IERC20(s.caw).transferFrom(msg.sender, s.burn, cost);
 		s.createdUsernames[username] = true;
 		_mint(msg.sender, s.nextNftId, 1, bytes(username));
 		s.nextNftId++;
@@ -215,4 +214,14 @@ contract UsernameFacet is IERC1155, Modifiers {
 		AppStorage storage s = LibAppStorage.diamondStorage();
 		s.usernameCostTable[length] = cost;
 	}
+
+  function getUsernameCost(uint8 length) external view returns (uint256) {
+		AppStorage storage s = LibAppStorage.diamondStorage();
+    require(length > 0, "No zero length names");
+		if (length > 8) {
+			length = 8;
+		}
+    return s.usernameCostTable[length - 1];
+
+  }
 }

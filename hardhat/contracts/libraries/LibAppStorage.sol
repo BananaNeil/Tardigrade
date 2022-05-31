@@ -4,6 +4,7 @@ import {LibDiamond} from './LibDiamond.sol';
 
 
 struct AppStorage {
+  address burn;
   address caw;
   mapping(uint8 => uint256) usernameCostTable;
   mapping(string => bool) createdUsernames;
