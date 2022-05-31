@@ -178,7 +178,7 @@ contract UsernameFacet is IERC1155, Modifiers {
 	function createUser(string memory username) external {
 		AppStorage storage s = LibAppStorage.diamondStorage();
 		uint256 taken = s.usernameToNftId[username];
-		(bool valid, uint8 length) = testString(username);
+		(bool valid, uint256 length) = testString(username);
 		require(valid, "UsernameFacet::Invalid Username, please only use 0-9 and a-z (no caps)");
 		require(taken == 0, "UsernameFacet::Username Taken already");
 		if (length > 8) {
@@ -193,9 +193,9 @@ contract UsernameFacet is IERC1155, Modifiers {
 		s.nextNftId++;
 	}
 
-	function testString(string memory letter) internal returns (bool, uint8) {
+	function testString(string memory letter) internal returns (bool, uint256) {
 		bytes memory bytesLetter = bytes(letter);
-		uint8 letterAmount = 0;
+		uint256 letterAmount = 0;
 		for (uint i; i < bytesLetter.length; i++) {
 			bytes1 char = bytesLetter[i];
 			if (char >= 0x30 && char <= 0x39) {
@@ -211,17 +211,18 @@ contract UsernameFacet is IERC1155, Modifiers {
 		return (true, letterAmount);
 	}
 
-	function setUsernameCost(uint8 length, uint256 cost) external onlyOwner {
+	function setUsernameCost(uint256 length, uint256 cost) external onlyOwner {
 		AppStorage storage s = LibAppStorage.diamondStorage();
 		s.usernameCostTable[length] = cost;
 	}
 
-  function getUsernameCost(uint8 length) external view returns (uint256) {
+  function getUsernameCost(uint256 length) external view returns (uint256) {
 		AppStorage storage s = LibAppStorage.diamondStorage();
     require(length > 0, "No zero length names");
 		if (length > 8) {
 			length = 8;
 		}
+    console.log(s.usernameCostTable[length-1]);
     return s.usernameCostTable[length - 1];
   }
 

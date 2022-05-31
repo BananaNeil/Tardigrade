@@ -11,7 +11,7 @@ struct Account {
 struct AppStorage {
   address burn;
   address caw;
-  mapping(uint8 => uint256) usernameCostTable;
+  mapping(uint256 => uint256) usernameCostTable;
   mapping(string => uint256) usernameToNftId;
   mapping(uint256 => string) nftIdToUsername;
   uint256 nextNftId;

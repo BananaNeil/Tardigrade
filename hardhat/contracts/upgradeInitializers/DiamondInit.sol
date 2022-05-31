@@ -43,7 +43,7 @@ contract DiamondInit {
     // More info here: https://eips.ethereum.org/EIPS/eip-2535#diamond-interface 
 
     s.uri = uri;
-    for (uint8 i = 1; i < usernameCostTable.length; i++) {
+    for (uint256 i = 0; i < usernameCostTable.length; i++) {
       s.usernameCostTable[i] = usernameCostTable[i];
     }
     s.caw = caw;
