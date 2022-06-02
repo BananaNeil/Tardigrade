@@ -2,6 +2,13 @@ pragma solidity ^0.8.0;
 
 import {LibDiamond} from './LibDiamond.sol';
 
+/*
+struct Account {
+  uint256 cawDeposits;
+  string username;
+  mapping(address => mapping(uint256 => bool)) usedNonces;
+}
+*/
 
 struct AppStorage {
   address burn;
@@ -11,6 +18,8 @@ struct AppStorage {
   // reverse map username <=> nftid
   mapping(string => uint256) usernameToNftId;
   mapping(uint256 => string) nftIdToUsername;
+  mapping(uint256 => address) nftIdToAddress;
+
   uint256 nextNftId;
   // given there is no multiple version of username this could be uint256 => address => bool
   // or even, why not nftid => addr

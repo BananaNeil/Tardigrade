@@ -2,7 +2,7 @@ pragma solidity 0.8.14;
 
 import { LibAppStorage, AppStorage, Modifiers } from '../libraries/LibAppStorage.sol';
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
+import 'hardhat/console.sol';
 contract ReceiverPaysFacet is Modifiers {
 
   function depositCaw(uint256 nftId, uint256 amount) external {
@@ -11,6 +11,7 @@ contract ReceiverPaysFacet is Modifiers {
     IERC20(s.caw).transferFrom(msg.sender, address(this), amount);
     s.nftIdCawDeposits[nftId] += amount;
   }
+
   function withdrawCaw(uint256 nftId, uint256 amount) external {
     AppStorage storage s = LibAppStorage.diamondStorage();
     require(s.nftBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to withdraw out of the nft wallet");
@@ -25,10 +26,16 @@ contract ReceiverPaysFacet is Modifiers {
     return s.nftIdCawDeposits[nftId];
   }
 
+
+
+
+
+/*
   function claimPayment(uint256 nftid, uint256 amount, uint256 nonce, bytes memory signature) external {
     AppStorage storage s = LibAppStorage.diamondStorage();
 
     uint256 nft = s.nftBalances[nftid][msg.sender];
+    address owner = s.nftIdToAddress[nftid];
     require(nft > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
 
     require(!s.nftUsedNonces[nftid][nonce]);
@@ -36,10 +43,20 @@ contract ReceiverPaysFacet is Modifiers {
 
     // this recreates the message that was signed on the client
     bytes32 message = prefixed(keccak256(abi.encodePacked(msg.sender, nftid, amount, nonce, this)));
-    require(recoverSigner(message, signature) == msg.sender);
+    require(recoverSigner(message, signature) == owner);
     IERC20(s.caw).transfer(msg.sender, amount);
     //payable(msg.sender).transfer(amount);
   }
+
+*/
+
+
+
+
+
+
+
+
 
   /// destroy the contract and reclaim the leftover funds.
   /*mudgen — 16/03/2022
@@ -86,6 +103,51 @@ contract ReceiverPaysFacet is Modifiers {
   function prefixed(bytes32 hash) internal pure returns (bytes32) {
     return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
   }
+
+  function claimPayment(
+    uint8 v,
+    bytes32 r,
+    bytes32 s,
+    uint256 claimerNft,
+    uint256 senderNft,
+    uint256 deadline,
+    uint256 amount
+  ) external {
+    AppStorage storage st = LibAppStorage.diamondStorage();
+
+    require(st.nftBalances[claimerNft][msg.sender] > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
+    
+   uint256 chainId;
+   assembly {
+     chainId := chainid()
+   }
+
+   bytes32 eip712DomainHash = keccak256(
+     abi.encode(
+       keccak256(
+         "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+   ),
+   keccak256(bytes("Tip")),
+   keccak256(bytes("1")),
+   chainId,
+   address(this)
+   )
+   );
+
+   bytes32 hashStruct = keccak256(
+     abi.encode(
+       keccak256("Tip(address sender, address receiver,uint256 amount,uint256 deadline"),
+       st.nftIdToAddress[senderNft],
+       amount,
+       deadline
+   )
+   );
+
+   bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
+   address signer = ecrecover(hash, v, r, s);
+   require(signer == st.nftIdToAddress[senderNft], "signer no equal sender");
+   require(signer != address(0), "signer equal addr(0)");
+   st.nftIdCawDeposits[senderNft] -= amount;
+   st.nftIdCawDeposits[claimerNft] += amount;
+  }
 }
-
-

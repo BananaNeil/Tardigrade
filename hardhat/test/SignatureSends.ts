@@ -82,7 +82,7 @@ describe("ReceiverPaysFacet", async () => {
 
     const domain =  {
       chainId: chainId,
-      name: 'SignatureSend',
+      name: 'Tip',
       verifyingContract: diamondAddress,
       version: '1'
     }
@@ -101,8 +101,8 @@ describe("ReceiverPaysFacet", async () => {
         { name: 'verifyingContract', type: 'address' },
       ],
       Tip: [
-        { name: 'sender', type: 'address' },
-        { name: 'receiver', type: 'address' },
+        { name: 'senderNft', type: 'uint256' },
+        { name: 'receiverNft', type: 'uint256' },
         { name: 'amount', type: 'uint256' },
         { name: 'deadline', type: 'uint256' },
 
@@ -111,8 +111,8 @@ describe("ReceiverPaysFacet", async () => {
 
     const ethersTipType = {
       Tip: [
-        { name: 'sender', type: 'address' },
-        { name: 'receiver', type: 'address' },
+        { name: 'senderNft', type: 'uint256' },
+        { name: 'receiverNft', type: 'uint256' },
         { name: 'amount', type: 'uint256' },
         { name: 'deadline', type: 'uint256' },
       ]
@@ -132,11 +132,19 @@ describe("ReceiverPaysFacet", async () => {
       message
     )
     console.log(signature)
-       const recoverAddr = recoverTypedSignature({data: msgParams, signature, version: SignTypedDataVersion.V4 })
+    const recoverAddr = recoverTypedSignature({data: msgParams, signature, version: SignTypedDataVersion.V4 })
     console.log(recoverAddr)
     console.log(accounts[2].address)
     
     expect(recoverAddr).to.equal(accounts[2].address.toLowerCase())
+
+    await receiverPaysFacet.connect(accounts[1]).claimPayment(
+      1,
+      hundredCaw,
+      0,
+      signature
+    )
+
     /*
 
      */

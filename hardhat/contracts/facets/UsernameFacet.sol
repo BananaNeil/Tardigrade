@@ -190,6 +190,7 @@ contract UsernameFacet is IERC1155, Modifiers {
 		_mint(msg.sender, s.nextNftId, 1, bytes(username));
 		s.usernameToNftId[username] = s.nextNftId;
     s.nftIdToUsername[s.nextNftId] = username;
+    s.nftIdToAddress[s.nextNftId] = msg.sender;
 		s.nextNftId++;
 	}
 
