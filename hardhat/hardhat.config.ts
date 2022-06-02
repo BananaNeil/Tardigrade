@@ -38,5 +38,10 @@ module.exports = {
       enabled: true,
       runs: 200
     }
+  },
+  networks: {
+    hardhat: {
+      chainId: 31337,
+    }
   }
 }

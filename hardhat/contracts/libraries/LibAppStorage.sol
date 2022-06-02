@@ -8,10 +8,13 @@ struct AppStorage {
   address caw;
   // username nft associated state
   mapping(uint256 => uint256) usernameCostTable;
-
+  // reverse map username <=> nftid
   mapping(string => uint256) usernameToNftId;
   mapping(uint256 => string) nftIdToUsername;
   uint256 nextNftId;
+  // given there is no multiple version of username this could be uint256 => address => bool
+  // or even, why not nftid => addr
+  // currently just following erc1155 standard
   mapping(uint256 => mapping(address => uint256)) nftBalances;
 
   mapping(address => mapping(address => bool)) operatorApprovals;

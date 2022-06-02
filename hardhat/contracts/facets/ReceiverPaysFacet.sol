@@ -7,17 +7,22 @@ contract ReceiverPaysFacet is Modifiers {
 
   function depositCaw(uint256 nftId, uint256 amount) external {
     AppStorage storage s = LibAppStorage.diamondStorage();
-    require(s.nftBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to deposit into the nft wallet")
+    require(s.nftBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to deposit into the nft wallet");
     IERC20(s.caw).transferFrom(msg.sender, address(this), amount);
-    s.nftIdCawDeposts[nftId] += amount;
+    s.nftIdCawDeposits[nftId] += amount;
   }
   function withdrawCaw(uint256 nftId, uint256 amount) external {
     AppStorage storage s = LibAppStorage.diamondStorage();
-    require(s.nftBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to withdraw out of the nft wallet")
+    require(s.nftBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to withdraw out of the nft wallet");
     uint256 nftIdDeposits = s.nftIdCawDeposits[nftId];
     require(nftIdDeposits >= amount, "ReceiverPaysFacet:: cannot withdraw more than put in");
     IERC20(s.caw).transferFrom(msg.sender, address(this), amount);
-    s.nftIdCawDeposts[nftId] -= amount;
+    s.nftIdCawDeposits[nftId] -= amount;
+  }
+
+  function getCawDepositsByNftId(uint256 nftId) external view returns (uint256) {
+    AppStorage storage s = LibAppStorage.diamondStorage();
+    return s.nftIdCawDeposits[nftId];
   }
 
   function claimPayment(uint256 nftid, uint256 amount, uint256 nonce, bytes memory signature) external {
