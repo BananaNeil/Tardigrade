@@ -75,8 +75,9 @@ describe("ReceiverPaysFacet", async () => {
   it("another user deposits caw and sig sends a tip", async () => {
     const thousandCaw = ethers.utils.parseEther('1000')
     const hundredCaw = ethers.utils.parseEther('100')
-    const nftid = await usernameFacet.getNftIdByUsername('account2')
-    await receiverPaysFacet.connect(accounts[2]).depositCaw(nftid, thousandCaw)
+    const senderNftId = await usernameFacet.getNftIdByUsername('account2')
+    const claimerNftId = await usernameFacet.getNftIdByUsername('account1')
+    await receiverPaysFacet.connect(accounts[2]).depositCaw(senderNftId, thousandCaw)
     const chainId = (await ethers.provider.getNetwork()).chainId
     const networkId = 1 // hardhat doesn't seem to want to observe networkId
 
@@ -86,11 +87,13 @@ describe("ReceiverPaysFacet", async () => {
       verifyingContract: diamondAddress,
       version: '1'
     }
+    console.log(Number(senderNftId))
+    const deadline = Math.floor(new Date().getTime() / 1000) + 3600
     const message = {
-      sender: accounts[2].address,
-      receiver: accounts[1].address,
+      senderNftId: Number(senderNftId),
+      claimerNftId: Number(claimerNftId),
       amount: Number(ethers.utils.formatEther(hundredCaw)),
-      deadline: Math.floor(new Date().getTime() / 1000) + 3600
+      deadline: deadline
     }
 
     const types: MessageTypes = {
@@ -101,8 +104,8 @@ describe("ReceiverPaysFacet", async () => {
         { name: 'verifyingContract', type: 'address' },
       ],
       Tip: [
-        { name: 'senderNft', type: 'uint256' },
-        { name: 'receiverNft', type: 'uint256' },
+        { name: 'senderNftId', type: 'uint256' },
+        { name: 'claimerNftId', type: 'uint256' },
         { name: 'amount', type: 'uint256' },
         { name: 'deadline', type: 'uint256' },
 
@@ -111,8 +114,8 @@ describe("ReceiverPaysFacet", async () => {
 
     const ethersTipType = {
       Tip: [
-        { name: 'senderNft', type: 'uint256' },
-        { name: 'receiverNft', type: 'uint256' },
+        { name: 'senderNftId', type: 'uint256' },
+        { name: 'claimerNftId', type: 'uint256' },
         { name: 'amount', type: 'uint256' },
         { name: 'deadline', type: 'uint256' },
       ]
@@ -132,6 +135,15 @@ describe("ReceiverPaysFacet", async () => {
       message
     )
     console.log(signature)
+    const signatureSans0x = signature.substring(2)
+    console.log(signature)
+    console.log('sender', accounts[2].address)
+    const r = '0x' + signatureSans0x.substring(0,64);
+    const s = '0x' + signatureSans0x.substring(64,128);
+    const v = parseInt(signatureSans0x.substring(128,130), 16)
+    console.log('v: ', v)
+    console.log('r: ', r)
+    console.log('s: ', s)
     const recoverAddr = recoverTypedSignature({data: msgParams, signature, version: SignTypedDataVersion.V4 })
     console.log(recoverAddr)
     console.log(accounts[2].address)
@@ -139,10 +151,13 @@ describe("ReceiverPaysFacet", async () => {
     expect(recoverAddr).to.equal(accounts[2].address.toLowerCase())
 
     await receiverPaysFacet.connect(accounts[1]).claimPayment(
-      1,
-      hundredCaw,
-      0,
-      signature
+      v,
+      r,
+      s,
+      Number(claimerNftId),
+      Number(senderNftId),
+      deadline,
+      Number(ethers.utils.formatEther(hundredCaw)),
     )
 
     /*

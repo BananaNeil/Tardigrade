@@ -50,14 +50,6 @@ contract ReceiverPaysFacet is Modifiers {
 
 */
 
-
-
-
-
-
-
-
-
   /// destroy the contract and reclaim the leftover funds.
   /*mudgen — 16/03/2022
     I don't think it is a good idea to add selfdestruct to the source code of a facet.  Because that could be used to delete the diamond proxy contract (if a facet function with selfdestruct was added to a diamond). Or a facet could be deleted when its functions are still being used by a diamond.   Plus there is no more gas refund for deleting a contract,  so I'm not sure there is any benefit (other than a cleaner blockchain) to deleting a contract or face
@@ -108,14 +100,14 @@ contract ReceiverPaysFacet is Modifiers {
     uint8 v,
     bytes32 r,
     bytes32 s,
-    uint256 claimerNft,
-    uint256 senderNft,
+    uint256 claimerNftId,
+    uint256 senderNftId,
     uint256 deadline,
     uint256 amount
   ) external {
     AppStorage storage st = LibAppStorage.diamondStorage();
 
-    require(st.nftBalances[claimerNft][msg.sender] > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
+    require(st.nftBalances[claimerNftId][msg.sender] > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
     
    uint256 chainId;
    assembly {
@@ -136,8 +128,9 @@ contract ReceiverPaysFacet is Modifiers {
 
    bytes32 hashStruct = keccak256(
      abi.encode(
-       keccak256("Tip(address sender, address receiver,uint256 amount,uint256 deadline"),
-       st.nftIdToAddress[senderNft],
+       keccak256("Tip(uint256 senderNftId,uint256 claimerNftId,uint256 amount,uint256 deadline)"),
+       senderNftId,
+       claimerNftId,
        amount,
        deadline
    )
@@ -145,9 +138,11 @@ contract ReceiverPaysFacet is Modifiers {
 
    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
    address signer = ecrecover(hash, v, r, s);
-   require(signer == st.nftIdToAddress[senderNft], "signer no equal sender");
+   console.log('signer recovered', signer);
+   console.log('senderAddr', st.nftIdToAddress[senderNftId]);
+   require(signer == st.nftIdToAddress[senderNftId], "signer no equal sender");
    require(signer != address(0), "signer equal addr(0)");
-   st.nftIdCawDeposits[senderNft] -= amount;
-   st.nftIdCawDeposits[claimerNft] += amount;
+   st.nftIdCawDeposits[senderNftId] -= amount;
+   st.nftIdCawDeposits[claimerNftId] += amount;
   }
 }
