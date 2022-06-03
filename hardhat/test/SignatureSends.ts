@@ -83,7 +83,7 @@ describe("ReceiverPaysFacet", async () => {
 
     const domain =  {
       chainId: chainId,
-      name: 'Tip',
+      name: 'Cawdrivium',
       verifyingContract: diamondAddress,
       version: '1'
     }
