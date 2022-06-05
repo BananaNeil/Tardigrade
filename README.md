@@ -25,3 +25,6 @@ Still exploring persistent storage and message ques.  Would love to hear debates
 
 ## Opensource
 Feel free to use this code in your own Caw implementation and contribute to this repo
+
+## Fun Ideas
+Fund [sci-hub](https://sci-hub.se/) with the stakepool, buy out Elsivier, create an alternative platform for publishing science that gives open-access and monetary incentive in one
