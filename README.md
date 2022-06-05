@@ -1,6 +1,8 @@
 # Cawdrivium
 Prototype Caw implementation for the seven classically liberal arts
 
+[discord](https://discord.gg/BUJaYAFxRr)
+
 ## About
 
 [$CAW](https://twitter.com/caw_announcer) drafted a [specification](https://www.reddit.com/r/SatoshiStreetBets/duplicates/up121h/caw_white_paper_decentralized_social_network/) for a decentralized social network that contains an open call for implementors.  Cawdrivium attempts to implement and explore the specification around a conservative starting point for a social media that cryptographically denies the right to be forgotten, the seven classical liberal arts; Grammar, Logic, Rhetoric through Geometry, Mathematics, Astronomy and Music.  It was after the bubonic plague that the Renaissance emerged, and now we have all seen the outcome of a world where knowledge and wisdom is monopolized over the ignorant for profit and prestige.  Cawdrivium hopes to offer a place where we can collectivly offer the opportunity of acheiving liberalis, the quality of being a free man, to each other.
