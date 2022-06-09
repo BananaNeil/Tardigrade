@@ -30,36 +30,36 @@ contract ReceiverPaysFacet is Modifiers {
 
 
 
-/*
-  function claimPayment(uint256 nftid, uint256 amount, uint256 nonce, bytes memory signature) external {
-    AppStorage storage s = LibAppStorage.diamondStorage();
+  /*
+     function claimPayment(uint256 nftid, uint256 amount, uint256 nonce, bytes memory signature) external {
+     AppStorage storage s = LibAppStorage.diamondStorage();
 
-    uint256 nft = s.nftBalances[nftid][msg.sender];
-    address owner = s.nftIdToAddress[nftid];
-    require(nft > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
+  uint256 nft = s.nftBalances[nftid][msg.sender];
+  address owner = s.nftIdToAddress[nftid];
+  require(nft > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
 
-    require(!s.nftUsedNonces[nftid][nonce]);
-    s.nftUsedNonces[nftid][nonce] = true;
+  require(!s.nftUsedNonces[nftid][nonce]);
+  s.nftUsedNonces[nftid][nonce] = true;
 
-    // this recreates the message that was signed on the client
-    bytes32 message = prefixed(keccak256(abi.encodePacked(msg.sender, nftid, amount, nonce, this)));
-    require(recoverSigner(message, signature) == owner);
-    IERC20(s.caw).transfer(msg.sender, amount);
-    //payable(msg.sender).transfer(amount);
-  }
+  // this recreates the message that was signed on the client
+  bytes32 message = prefixed(keccak256(abi.encodePacked(msg.sender, nftid, amount, nonce, this)));
+  require(recoverSigner(message, signature) == owner);
+  IERC20(s.caw).transfer(msg.sender, amount);
+  //payable(msg.sender).transfer(amount);
+}
 
 */
 
   /// destroy the contract and reclaim the leftover funds.
   /*mudgen — 16/03/2022
-    I don't think it is a good idea to add selfdestruct to the source code of a facet.  Because that could be used to delete the diamond proxy contract (if a facet function with selfdestruct was added to a diamond). Or a facet could be deleted when its functions are still being used by a diamond.   Plus there is no more gas refund for deleting a contract,  so I'm not sure there is any benefit (other than a cleaner blockchain) to deleting a contract or face
+  I don't think it is a good idea to add selfdestruct to the source code of a facet.  Because that could be used to delete the diamond proxy contract (if a facet function with selfdestruct was added to a diamond). Or a facet could be deleted when its functions are still being used by a diamond.   Plus there is no more gas refund for deleting a contract,  so I'm not sure there is any benefit (other than a cleaner blockchain) to deleting a contract or face
 
 
-    function shutdown() external onlyOwner  {
-  // I wonder what happens with self destruct and diamonds
-  selfdestruct(payable(address(0)));
+  function shutdown() external onlyOwner  {
+    // I wonder what happens with self destruct and diamonds
+    selfdestruct(payable(address(0)));
   }a
-   */
+  */
 
   /// signature methods.
   function splitSignature(bytes memory sig)
@@ -109,45 +109,45 @@ contract ReceiverPaysFacet is Modifiers {
 
     require(st.nftBalances[claimerNftId][msg.sender] > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
     require(st.nftIdCawDeposits[senderNftId] >= amount, "ReceiverPayFacet::sender doesn't have enough deposits");
-    
-   uint256 chainId;
-   assembly {
-     chainId := chainid()
-   }
 
-   bytes32 eip712DomainHash = keccak256(
-     abi.encode(
-       keccak256(
-         "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
-   ),
-   keccak256(bytes("Cawdrivium")),
-   keccak256(bytes("1")),
-   chainId,
-   address(this)
-   )
-   );
+    uint256 chainId;
+    assembly {
+      chainId := chainid()
+    }
 
-   bytes32 hashStruct = keccak256(
-     abi.encode(
-       keccak256("Tip(uint256 senderNftId,uint256 claimerNftId,uint256 amount,uint256 deadline)"),
-       senderNftId,
-       claimerNftId,
-       amount,
-       deadline
-   )
-   );
+    bytes32 eip712DomainHash = keccak256(
+      abi.encode(
+        keccak256(
+          "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+    ),
+    keccak256(bytes("Cawdrivium")),
+    keccak256(bytes("1")),
+    chainId,
+    address(this)
+    )
+    );
 
-   bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
-   address signer = ecrecover(hash, v, r, s);
-   console.log('signer recovered', signer);
-   console.log('senderAddr', st.nftIdToAddress[senderNftId]);
-   require(signer == st.nftIdToAddress[senderNftId], "signer no equal sender");
-   require(signer != address(0), "signer equal addr(0)");
-   console.log('ReceiverPayFacet::claimPayment::amount', amount);
-   console.log('ReceiverPayFacet::claimPayment::senderDeposits', st.nftIdCawDeposits[senderNftId]);
-   console.log('ReceiverPayFacet::claimPayment::claimerDeposit', st.nftIdCawDeposits[senderNftId]);
-   st.nftIdCawDeposits[senderNftId] -= amount;
-   console.log('ReceiverPayFacet::claimPayment::senderDeposits', st.nftIdCawDeposits[senderNftId]);
-   st.nftIdCawDeposits[claimerNftId] += amount;
+    bytes32 hashStruct = keccak256(
+      abi.encode(
+        keccak256("Tip(uint256 senderNftId,uint256 claimerNftId,uint256 amount,uint256 deadline)"),
+        senderNftId,
+        claimerNftId,
+        amount,
+        deadline
+    )
+    );
+
+    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
+    address signer = ecrecover(hash, v, r, s);
+    console.log('signer recovered', signer);
+    console.log('senderAddr', st.nftIdToAddress[senderNftId]);
+    require(signer == st.nftIdToAddress[senderNftId], "signer no equal sender");
+    require(signer != address(0), "signer equal addr(0)");
+    console.log('ReceiverPayFacet::claimPayment::amount', amount);
+    console.log('ReceiverPayFacet::claimPayment::senderDeposits', st.nftIdCawDeposits[senderNftId]);
+    console.log('ReceiverPayFacet::claimPayment::claimerDeposit', st.nftIdCawDeposits[senderNftId]);
+    st.nftIdCawDeposits[senderNftId] -= amount;
+    console.log('ReceiverPayFacet::claimPayment::senderDeposits', st.nftIdCawDeposits[senderNftId]);
+    st.nftIdCawDeposits[claimerNftId] += amount;
   }
 }

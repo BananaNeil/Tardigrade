@@ -3,12 +3,12 @@ pragma solidity ^0.8.0;
 import {LibDiamond} from './LibDiamond.sol';
 
 /*
-struct Account {
-  uint256 cawDeposits;
-  string username;
-  mapping(address => mapping(uint256 => bool)) usedNonces;
-}
-*/
+   struct Account {
+   uint256 cawDeposits;
+   string username;
+   mapping(address => mapping(uint256 => bool)) usedNonces;
+   }
+ */
 
 struct AppStorage {
   address burn;
