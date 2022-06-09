@@ -10,6 +10,12 @@ import {LibDiamond} from './LibDiamond.sol';
    }
  */
 
+// using for batch tip
+struct Tip {
+  uint256 senderNftId;
+  uint256 amount;
+}
+
 struct AppStorage {
   address burn;
   address caw;

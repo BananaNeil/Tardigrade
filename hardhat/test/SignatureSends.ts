@@ -90,7 +90,6 @@ describe("ReceiverPaysFacet", async () => {
       verifyingContract: diamondAddress,
       version: '1'
     }
-    console.log(Number(senderNftId))
     const deadline = Math.floor(new Date().getTime() / 1000) + 3600
     const message = {
       senderNftId: Number(senderNftId),
@@ -150,7 +149,7 @@ describe("ReceiverPaysFacet", async () => {
     const recoverAddr = recoverTypedSignature({data: msgParams, signature, version: SignTypedDataVersion.V4 })
     console.log(recoverAddr)
     console.log(accounts[2].address)
-    
+
     expect(recoverAddr).to.equal(accounts[2].address.toLowerCase())
 
     await receiverPaysFacet.connect(accounts[1]).claimPayment(
@@ -163,7 +162,7 @@ describe("ReceiverPaysFacet", async () => {
       hundredCaw.toString(),
     )
 
-    
+
     const senderDeposits2 = await receiverPaysFacet.getCawDepositsByNftId(senderNftId)
     const claimerDeposits2 = await receiverPaysFacet.getCawDepositsByNftId(claimerNftId)
     //console.log(ethers.utils.formatEther(senderDeposits2))
@@ -174,4 +173,157 @@ describe("ReceiverPaysFacet", async () => {
 
      */
   })
+
+  it("allows for recursive chaining of Tips so alot one can claim from many users at once", async () => {
+    const thousandCaw = ethers.utils.parseEther('1000')
+    const hundredCaw = ethers.utils.parseEther('100')
+
+    //const acc5NftId = await usernameFacet.getNftIdByUsername('account5')
+    //await receiverPaysFacet.connect(accounts[5]).depositCaw(acc5NftId, thousandCaw)
+    //const acc5Deposits1 = await receiverPaysFacet.getCawDepositsByNftId(acc5NftId)
+
+    //const acc4NftId = await usernameFacet.getNftIdByUsername('account4')
+    //await receiverPaysFacet.connect(accounts[4]).depositCaw(acc4NftId, thousandCaw)
+    //const acc4Deposits1 = await receiverPaysFacet.getCawDepositsByNftId(acc4NftId)
+
+    const acc3NftId = await usernameFacet.getNftIdByUsername('account3')
+    await receiverPaysFacet.connect(accounts[3]).depositCaw(acc3NftId, thousandCaw)
+    const acc3Deposits1 = await receiverPaysFacet.getCawDepositsByNftId(acc3NftId)
+
+    const acc2NftId = await usernameFacet.getNftIdByUsername('account2')
+    await receiverPaysFacet.connect(accounts[2]).depositCaw(acc2NftId, thousandCaw)
+    const acc2Deposits1 = await receiverPaysFacet.getCawDepositsByNftId(acc2NftId)
+
+    const claimerNftId = await usernameFacet.getNftIdByUsername('account1')
+    const claimerDeposits1 = await receiverPaysFacet.getCawDepositsByNftId(claimerNftId)
+
+    const chainId = (await ethers.provider.getNetwork()).chainId
+    const networkId = 1 // hardhat doesn't seem to want to observe networkId
+
+    const domain =  {
+      chainId: chainId,
+      name: 'Cawdrivium',
+      verifyingContract: diamondAddress,
+      version: '1'
+    }
+    const deadline = Math.floor(new Date().getTime() / 1000) + 3600
+
+    const types: MessageTypes = {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
+      TipChain: [
+        { name: 'claimerNftId', type: 'uint256' },
+        { name: 'deadline', type: 'uint256' },
+        { name: 'tips', type: 'Tip[]' },
+        { name: 'tipsigs', type: 'bytes[]' }
+      ],
+      Tip: [
+        { name: 'senderNftId', type: 'uint256' },
+        { name: 'amount', type: 'uint256' },
+      ]
+    }
+
+    const ethersTipChainType = { // Tried to be ergonomic by providing EIP712 domain
+      TipChain: [
+        { name: 'claimerNftId', type: 'uint256' },
+        { name: 'deadline', type: 'uint256' },
+        { name: 'tips', type: 'Tip[]' },
+        { name: 'tipsigs', type: 'bytes[]' }
+      ],
+      Tip: [
+        { name: 'senderNftId', type: 'uint256' },
+        { name: 'amount', type: 'uint256' },
+      ]
+    }
+    const ethersTipType = { // Tried to be ergonomic by providing EIP712 domain
+      Tip: [
+        { name: 'senderNftId', type: 'uint256' },
+        { name: 'amount', type: 'uint256' },
+      ]
+    }
+    // love to see an ipfs hash chain as these,
+    //
+    let message = {
+      claimerNftId: Number(claimerNftId), // this nft can sweep funds
+      deadline: deadline, // when the bus leaves, matched with lock on deposit box
+      tips: <any[]>[],
+      tipsigs: <string[]>[]
+    }
+    // account 3 leaves a tip in claimer tip jar,
+    const acc3Tip = {
+      senderNftId: Number(acc3NftId),
+      amount: hundredCaw.toString()
+    }
+    message.tips.push(acc3Tip)
+
+    const acc3TipSignature:string = await accounts[3]._signTypedData(
+      domain,
+      ethersTipType,
+      acc3Tip
+    )
+
+    message.tipsigs.push(acc3TipSignature)
+
+
+   // account 2 leaves a tip in the claimer tip jar 
+    const acc2Tip = {
+      senderNftId: Number(acc3NftId),
+      amount: hundredCaw.toString()
+    }
+    message.tips.push(acc2Tip)
+    const acc2TipSignature:string = await accounts[2]._signTypedData(
+      domain,
+      ethersTipType,
+      acc2Tip
+    )
+    message.tipsigs.push(acc2TipSignature)
+
+
+    const msgParams: TypedMessage<MessageTypes> = {
+      domain,
+      message,
+      primaryType: 'TipChain',
+      types
+    }
+
+   // claimer signing the package 
+    const signature:string = await accounts[1]._signTypedData(
+      domain,
+      ethersTipChainType,
+      message
+    )
+    console.log(ethersTipChainType)
+    console.log(signature)
+
+    const signatureSans0x = signature.substring(2)
+    const r = '0x' + signatureSans0x.substring(0,64);
+    const s = '0x' + signatureSans0x.substring(64,128);
+    const v = parseInt(signatureSans0x.substring(128,130), 16)
+    console.log('v: ', v)
+    console.log('r: ', r)
+    console.log('s: ', s)
+    const recoverAddr = recoverTypedSignature({data: msgParams, signature, version: SignTypedDataVersion.V4 })
+    console.log(recoverAddr)
+    console.log(accounts[1].address)
+
+    expect(recoverAddr).to.equal(accounts[1].address.toLowerCase())
+    await receiverPaysFacet.connect(accounts[1]).claimPaymentBatch(
+      v,
+      r,
+      s,
+      Number(claimerNftId),
+      deadline,
+      message.tips,
+      message.tipsigs
+    )
+
+    assert.fail('issues aligning abi encodes for nested structs, arbitrary tip length makes abi.encodepacked with a ... operator difficult, going to to research merkle tree methods')
+    /*
+   */
+  })
+
 })
