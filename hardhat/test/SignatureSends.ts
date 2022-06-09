@@ -77,7 +77,10 @@ describe("ReceiverPaysFacet", async () => {
     const hundredCaw = ethers.utils.parseEther('100')
     const senderNftId = await usernameFacet.getNftIdByUsername('account2')
     const claimerNftId = await usernameFacet.getNftIdByUsername('account1')
+    const claimerDeposits1 = await receiverPaysFacet.getCawDepositsByNftId(claimerNftId)
+    // sender deposits caw
     await receiverPaysFacet.connect(accounts[2]).depositCaw(senderNftId, thousandCaw)
+    const senderDeposits1 = await receiverPaysFacet.getCawDepositsByNftId(senderNftId)
     const chainId = (await ethers.provider.getNetwork()).chainId
     const networkId = 1 // hardhat doesn't seem to want to observe networkId
 
@@ -92,7 +95,7 @@ describe("ReceiverPaysFacet", async () => {
     const message = {
       senderNftId: Number(senderNftId),
       claimerNftId: Number(claimerNftId),
-      amount: Number(ethers.utils.formatEther(hundredCaw)),
+      amount: hundredCaw.toString(),
       deadline: deadline
     }
 
@@ -157,8 +160,15 @@ describe("ReceiverPaysFacet", async () => {
       Number(claimerNftId),
       Number(senderNftId),
       deadline,
-      Number(ethers.utils.formatEther(hundredCaw)),
+      hundredCaw.toString(),
     )
+
+    
+    const senderDeposits2 = await receiverPaysFacet.getCawDepositsByNftId(senderNftId)
+    const claimerDeposits2 = await receiverPaysFacet.getCawDepositsByNftId(claimerNftId)
+    //console.log(ethers.utils.formatEther(senderDeposits2))
+    expect(claimerDeposits1.add(hundredCaw)).to.equal(claimerDeposits2)
+    expect(senderDeposits1.sub(hundredCaw)).to.equal(senderDeposits2)
 
     /*
 

@@ -108,6 +108,7 @@ contract ReceiverPaysFacet is Modifiers {
     AppStorage storage st = LibAppStorage.diamondStorage();
 
     require(st.nftBalances[claimerNftId][msg.sender] > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
+    require(st.nftIdCawDeposits[senderNftId] >= amount, "ReceiverPayFacet::sender doesn't have enough deposits");
     
    uint256 chainId;
    assembly {
@@ -142,7 +143,11 @@ contract ReceiverPaysFacet is Modifiers {
    console.log('senderAddr', st.nftIdToAddress[senderNftId]);
    require(signer == st.nftIdToAddress[senderNftId], "signer no equal sender");
    require(signer != address(0), "signer equal addr(0)");
+   console.log('ReceiverPayFacet::claimPayment::amount', amount);
+   console.log('ReceiverPayFacet::claimPayment::senderDeposits', st.nftIdCawDeposits[senderNftId]);
+   console.log('ReceiverPayFacet::claimPayment::claimerDeposit', st.nftIdCawDeposits[senderNftId]);
    st.nftIdCawDeposits[senderNftId] -= amount;
+   console.log('ReceiverPayFacet::claimPayment::senderDeposits', st.nftIdCawDeposits[senderNftId]);
    st.nftIdCawDeposits[claimerNftId] += amount;
   }
 }
