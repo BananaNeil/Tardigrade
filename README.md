@@ -24,9 +24,10 @@ The Crux on the smart contract side seems to be faciliting the [EIP-712](https:/
 
 Still exploring persistent storage and message ques.  Would love to hear debates between the different storage medium.  I am thinking initially I'll explore Arweave or filecoin, and than orbit-db or the like for the passing of materials.
 
-
 ## Opensource
 Feel free to use this code in your own Caw implementation and contribute to this repo
 
 ## Fun Ideas
 Fund [sci-hub](https://sci-hub.se/) with the stakepool, buy out Elsivier, create an alternative platform for publishing science that gives open-access and monetary incentive in one
+
+
