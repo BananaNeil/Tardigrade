@@ -1,6 +1,9 @@
 // @ts-nocheck
 "use strict";
 var hash_1 = require("@ethersproject/hash");
+var bytes_1 = require("@ethersproject/bytes");
+import { SigningKey  } from "@ethersproject/signing-key";
+
 
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -39,7 +42,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 		if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
 	}
 };
-function signTypedData(domain, types, value) {
+export function signTypedData(signingKey, domain, types, value) {
 	return __awaiter(this, void 0, void 0, function () {
 		var populated;
 		var _this = this;
@@ -56,7 +59,10 @@ function signTypedData(domain, types, value) {
 				})];
 				case 1:
 					populated = _a.sent();
-				return [2 /*return*/, bytes_1.joinSignature(this._signingKey().signDigest(hash_1._TypedDataEncoder.hash(populated.domain, types, populated.value)))];
+        console.log('populated', populated)
+        console.log('types', types)
+        const digest = hash_1._TypedDataEncoder.hash(populated.domain, types, populated.value)
+				return [2 /*return*/, bytes_1.joinSignature(signingKey.signDigest(digest))];
 			}
 		});
 	});

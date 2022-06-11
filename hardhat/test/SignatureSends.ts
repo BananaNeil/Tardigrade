@@ -1,6 +1,7 @@
 import hre, { ethers } from "hardhat";
 import { BigNumber, Signer } from "ethers";
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
+import { signTypedData } from './utils/utils'
 const { expect,assert } = require('chai')
 import {
   encrypt,
@@ -129,8 +130,16 @@ describe("ReceiverPaysFacet", async () => {
       primaryType: 'Tip',
       types
     }
-
-
+    /*
+    console.log(
+      signTypedData(
+        SigningKey(),
+        domain,
+        ethersTipType,
+        message
+      )
+    )
+   */
     const signature:string = await accounts[2]._signTypedData(
       domain,
       ethersTipType,
