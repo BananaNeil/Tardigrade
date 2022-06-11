@@ -174,7 +174,8 @@ describe("ReceiverPaysFacet", async () => {
      */
   })
 
-  it("allows for recursive chaining of Tips so alot one can claim from many users at once", async () => {
+
+  it("", async () => {
     const thousandCaw = ethers.utils.parseEther('1000')
     const hundredCaw = ethers.utils.parseEther('100')
 
@@ -219,7 +220,9 @@ describe("ReceiverPaysFacet", async () => {
         { name: 'claimerNftId', type: 'uint256' },
         { name: 'deadline', type: 'uint256' },
         { name: 'tips', type: 'Tip[]' },
-        { name: 'tipsigs', type: 'bytes[]' }
+        { name: 'tipsigs', type: 'bytes[]' },
+        { name: 'iterator', type: 'uint256' }
+
       ],
       Tip: [
         { name: 'senderNftId', type: 'uint256' },
@@ -232,7 +235,8 @@ describe("ReceiverPaysFacet", async () => {
         { name: 'claimerNftId', type: 'uint256' },
         { name: 'deadline', type: 'uint256' },
         { name: 'tips', type: 'Tip[]' },
-        { name: 'tipsigs', type: 'bytes[]' }
+        { name: 'tipsigs', type: 'bytes[]' },
+        { name: 'iterator', type: 'uint256' }
       ],
       Tip: [
         { name: 'senderNftId', type: 'uint256' },
@@ -251,7 +255,8 @@ describe("ReceiverPaysFacet", async () => {
       claimerNftId: Number(claimerNftId), // this nft can sweep funds
       deadline: deadline, // when the bus leaves, matched with lock on deposit box
       tips: <any[]>[],
-      tipsigs: <string[]>[]
+      tipsigs: <string[]>[],
+      iterator: 0
     }
     // account 3 leaves a tip in claimer tip jar,
     const acc3Tip = {
@@ -259,6 +264,7 @@ describe("ReceiverPaysFacet", async () => {
       amount: hundredCaw.toString()
     }
     message.tips.push(acc3Tip)
+    message.iterator += 1
 
     const acc3TipSignature:string = await accounts[3]._signTypedData(
       domain,
@@ -275,13 +281,15 @@ describe("ReceiverPaysFacet", async () => {
       amount: hundredCaw.toString()
     }
     message.tips.push(acc2Tip)
+    message.iterator += 1
+
     const acc2TipSignature:string = await accounts[2]._signTypedData(
       domain,
       ethersTipType,
       acc2Tip
     )
     message.tipsigs.push(acc2TipSignature)
-
+    console.log(message)
 
     const msgParams: TypedMessage<MessageTypes> = {
       domain,
@@ -308,7 +316,9 @@ describe("ReceiverPaysFacet", async () => {
     console.log('s: ', s)
     const recoverAddr = recoverTypedSignature({data: msgParams, signature, version: SignTypedDataVersion.V4 })
     console.log(recoverAddr)
-    console.log(accounts[1].address)
+    console.log('acc1',accounts[1].address)
+    console.log('acc2',accounts[2].address)
+    console.log('acc3',accounts[3].address)
 
     expect(recoverAddr).to.equal(accounts[1].address.toLowerCase())
     await receiverPaysFacet.connect(accounts[1]).claimPaymentBatch(
@@ -318,10 +328,11 @@ describe("ReceiverPaysFacet", async () => {
       Number(claimerNftId),
       deadline,
       message.tips,
-      message.tipsigs
+      message.tipsigs,
+      message.iterator
     )
 
-    assert.fail('issues aligning abi encodes for nested structs, arbitrary tip length makes abi.encodepacked with a ... operator difficult, going to to research merkle tree methods')
+    assert.fail('issues aligning abi encodes for nested structs, arbitrary tip length makes abi.encodepacked with a ... operator difficult, going to to research merkle tree methods, or add iterator to message, lets try that')
     /*
    */
   })

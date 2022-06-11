@@ -167,10 +167,11 @@ contract ReceiverPaysFacet is Modifiers {
     uint256  claimerNftId,
     uint256  deadline,
     Tip[] memory tips,
-    bytes[] memory tipsigs
+    bytes[] memory tipsigs,
+    uint256 iterator
   ) external {
     AppStorage storage st = LibAppStorage.diamondStorage();
-    require(tips.length == tipsigs.length, "please map tips and tipsigs 1:1");
+    require(iterator == tipsigs.length, "please map tips, iterator & tipsigs 1:1");
     // It will delightfully more efficient if users come together to make a big sig send that a user can claim in a single sweep
     require(st.nftBalances[claimerNftId][msg.sender] > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
 
@@ -183,22 +184,23 @@ contract ReceiverPaysFacet is Modifiers {
       abi.encode(
         keccak256(
           "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
-    ),
-    keccak256(bytes("Cawdrivium")),
-    keccak256(bytes("1")),
-    chainId,
-    address(this)
-    )
+        ),
+        keccak256(bytes("Cawdrivium")),
+        keccak256(bytes("1")),
+        chainId,
+        address(this)
+      )
     );
 
 
     bytes32 hashStruct = keccak256(
       abi.encode(
-        keccak256("TipChain(uint256 claimerNftId,uint256 deadline,Tip[] tips,bytes[] tipsigs)Tip(uint256 senderNftId,uint256 amount)"),
+        keccak256("TipChain(uint256 claimerNftId,uint256 deadline,Tip[] tips,bytes[] tipsigs,uint256 iterator)Tip(uint256 senderNftId,uint256 amount)"),
         claimerNftId,
         deadline,
         tips,
-        tipsigs
+        tipsigs,
+        iterator
       )
     );
     bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
@@ -206,7 +208,7 @@ contract ReceiverPaysFacet is Modifiers {
     console.log(msg.sender, 'message.sender');
     //require(ecrecover(hash, v, r, s) == msg.sender, "tip jar is self signed, tips are not");
 
-    for (uint i=0;i < tipsigs.length; i++) {
+    for (uint i=0;i < iterator; i++) {
       bytes32 hashStruct = keccak256(
         abi.encode(
           keccak256("Tip(uint256 senderNftId, uint256 amount)"),
@@ -214,8 +216,11 @@ contract ReceiverPaysFacet is Modifiers {
           tips[i].amount
         )
       );
-      bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
-      address signer = recoverSigner(hash, tipsigs[i]);
+      address signer = recoverSigner(
+        keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct)),
+        tipsigs[i]
+      );
+      console.log(signer, 'tips loop');
       if (signer == st.nftIdToAddress[tips[i].senderNftId]) {
         st.nftIdCawDeposits[tips[i].senderNftId] -= tips[i].amount;
         st.nftIdCawDeposits[claimerNftId] += tips[i].amount;
