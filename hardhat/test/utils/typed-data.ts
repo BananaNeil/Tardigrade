@@ -258,12 +258,11 @@ export class TypedDataEncoder {
     let encoder = this._encoderCache[type];
     if (!encoder) {
       encoder = this._encoderCache[type] = this._getEncoder(type);
-    }
+   }
     return encoder;
   }
 
   _getEncoder(type: string): (value: any) => string {
-
     // Basic encoder type (address, bool, uint256, etc)
     {
       const encoder = getBaseEncoder(type);
@@ -273,15 +272,46 @@ export class TypedDataEncoder {
     // Array
     const match = type.match(/^(.*)(\x5b(\d*)\x5d)$/);
     if (match) {
+      console.log('getEncoder::type', type)
+      console.log('matched', match)
       const subtype = match[1];
       const subEncoder = this.getEncoder(subtype);
       const length = parseInt(match[3]);
+      console.log('length', length)
       return (value: Array<any>) => {
+        console.log('valueinit', value)
         if (length >= 0 && value.length !== length) {
           logger.throwArgumentError("array length mismatch; expected length ${ arrayLength }", "value", value);
         }
-
+        // For Array of struct, this hashed i think the first array entry twice
+        /*
+         *getEncoder::type Tip[]
+					matched [
+						'Tip[]',
+						'Tip',
+						'[]',
+						'',
+						index: 0,
+						input: 'Tip[]',
+						groups: undefined
+					]
+					fields [
+						{ name: 'senderNftId', type: 'uint256' },
+						{ name: 'amount', type: 'uint256' }
+					]
+					length NaN
+					valueinit [
+						{ senderNftId: 3, amount: '100000000000000000000' },
+						{ senderNftId: 2, amount: '100000000000000000000' }
+					]
+					result [
+						'0x31c5338e4de2a5576731134b0350615aff3b5d3ddba49b2534bc6afca519794d00000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000056bc75e2d63100000',
+						'0x31c5338e4de2a5576731134b0350615aff3b5d3ddba49b2534bc6afca519794d00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000056bc75e2d63100000'
+					]
+         */
         let result = value.map(subEncoder);
+        console.log('result', result)
+        console.log('this._types[subtype]', this._types[subtype])
         if (this._types[subtype]) {
           result = result.map(keccak256);
         }
@@ -293,6 +323,7 @@ export class TypedDataEncoder {
     // Struct
     const fields = this.types[type];
     if (fields) {
+      console.log('fields', fields)
       const encodedType = id(this._types[type]);
       return (value: Record<string, any>) => {
         const values = fields.map(({ name, type }) => {
@@ -321,6 +352,7 @@ export class TypedDataEncoder {
   }
 
   hashStruct(name: string, value: Record<string, any>): string {
+    
     return keccak256(this.encodeData(name, value));
   }
 

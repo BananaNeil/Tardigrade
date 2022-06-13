@@ -1,4 +1,5 @@
 import hre, { ethers } from "hardhat";
+import { SigningKey } from './utils/SigningKey'
 import { BigNumber, Signer } from "ethers";
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { signTypedData } from './utils/utils'
@@ -131,15 +132,15 @@ describe("ReceiverPaysFacet", async () => {
       types
     }
     /*
-    console.log(
-      signTypedData(
-        SigningKey(),
-        domain,
-        ethersTipType,
-        message
-      )
-    )
-   */
+       console.log(
+       signTypedData(
+       SigningKey(),
+       domain,
+       ethersTipType,
+       message
+       )
+       )
+     */
     const signature:string = await accounts[2]._signTypedData(
       domain,
       ethersTipType,
@@ -284,9 +285,9 @@ describe("ReceiverPaysFacet", async () => {
     message.tipsigs.push(acc3TipSignature)
 
 
-   // account 2 leaves a tip in the claimer tip jar 
+    // account 2 leaves a tip in the claimer tip jar 
     const acc2Tip = {
-      senderNftId: Number(acc3NftId),
+      senderNftId: Number(acc2NftId),
       amount: hundredCaw.toString()
     }
     message.tips.push(acc2Tip)
@@ -307,7 +308,19 @@ describe("ReceiverPaysFacet", async () => {
       types
     }
 
-   // claimer signing the package 
+    // claimer signing the package
+    const wallet = ethers.Wallet.createRandom()
+    console.log('========================')
+   console.log(
+     await signTypedData(
+       new SigningKey(wallet.privateKey),
+       domain,
+       ethersTipChainType,
+       message
+     )
+   )
+
+    console.log('========================')
     const signature:string = await accounts[1]._signTypedData(
       domain,
       ethersTipChainType,
@@ -324,7 +337,7 @@ describe("ReceiverPaysFacet", async () => {
     console.log('r: ', r)
     console.log('s: ', s)
     const recoverAddr = recoverTypedSignature({data: msgParams, signature, version: SignTypedDataVersion.V4 })
-    console.log(recoverAddr)
+    console.log('recoveraddr', recoverAddr)
     console.log('acc1',accounts[1].address)
     console.log('acc2',accounts[2].address)
     console.log('acc3',accounts[3].address)
@@ -343,7 +356,7 @@ describe("ReceiverPaysFacet", async () => {
 
     assert.fail('issues aligning abi encodes for nested structs, arbitrary tip length makes abi.encodepacked with a ... operator difficult, going to to research merkle tree methods, or add iterator to message, lets try that')
     /*
-   */
+     */
   })
 
 })
