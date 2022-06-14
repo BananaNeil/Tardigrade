@@ -1,8 +1,9 @@
 pragma solidity 0.8.14;
 
-import { LibAppStorage, AppStorage, Modifiers, Tip } from '../libraries/LibAppStorage.sol';
+import { LibAppStorage, AppStorage, Modifiers, Tip, Thing, Things } from '../libraries/LibAppStorage.sol';
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import 'hardhat/console.sol';
 contract ReceiverPaysFacet is Modifiers {
 
@@ -205,6 +206,8 @@ contract ReceiverPaysFacet is Modifiers {
     );
     bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
     console.log(ecrecover(hash,v,r,s), 'ecrecover');
+    console.log(ECDSA.recover(hash, v, r, s));
+    console.log('^ ecdsa reover');
     console.log(msg.sender, 'message.sender');
     //require(ecrecover(hash, v, r, s) == msg.sender, "tip jar is self signed, tips are not");
 
@@ -228,5 +231,54 @@ contract ReceiverPaysFacet is Modifiers {
         console.log('hmm');
       }
     }
+  }
+
+  function claimThings(
+    uint8 v,
+    bytes32 r,
+    bytes32 s,
+    Things memory things
+  ) external {
+    AppStorage storage st = LibAppStorage.diamondStorage();
+
+    uint256 chainId;
+    assembly {
+      chainId := chainid()
+    }
+
+    bytes32 eip712DomainHash = keccak256(
+      abi.encode(
+        keccak256(
+          "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+    ),
+    keccak256(bytes("Cawdrivium")),
+    keccak256(bytes("1")),
+    chainId,
+    address(this)
+    )
+    );
+    bytes32 hashThing1 = keccak256(
+      abi.encode(
+        keccak256("Thing(uint256 id)"),
+        things.things[0]
+      )
+    );
+    bytes32 hashThing2 = keccak256(
+      abi.encode(
+        keccak256("Thing(uint256 id)"),
+        things.things[1]
+      )
+    );
+    // Yay, its abi.encodePacked(string of array :')))
+    bytes32 hashThings = keccak256(
+      abi.encode(
+        keccak256("Things(Thing[] things)Thing(uint256 id)"),
+        keccak256(abi.encodePacked(hashThing1, hashThing2))
+    )
+    );
+
+    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashThings));
+    address signer = ecrecover(hash, v, r, s);
+    console.log('facet::', signer, msg.sender);
   }
 }

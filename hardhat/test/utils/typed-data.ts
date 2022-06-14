@@ -283,7 +283,7 @@ export class TypedDataEncoder {
         if (length >= 0 && value.length !== length) {
           logger.throwArgumentError("array length mismatch; expected length ${ arrayLength }", "value", value);
         }
-        // For Array of struct, this hashed i think the first array entry twice
+        // For Array of struct
         /*
          *getEncoder::type Tip[]
 					matched [
@@ -310,11 +310,13 @@ export class TypedDataEncoder {
 					]
          */
         let result = value.map(subEncoder);
-        console.log('result', result)
         console.log('this._types[subtype]', this._types[subtype])
         if (this._types[subtype]) {
           result = result.map(keccak256);
         }
+      
+        console.log('result', result)
+        console.log('hexConcat', hexConcat(result))
 
         return keccak256(hexConcat(result));
       };

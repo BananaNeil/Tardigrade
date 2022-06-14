@@ -74,6 +74,8 @@ describe("ReceiverPaysFacet", async () => {
       assert.include(e.message, 'ReceiverPaysFacet::must own nft')
     }
   })
+
+    /*
   it("another user deposits caw and sig sends a tip", async () => {
     const thousandCaw = ethers.utils.parseEther('1000')
     const hundredCaw = ethers.utils.parseEther('100')
@@ -131,7 +133,6 @@ describe("ReceiverPaysFacet", async () => {
       primaryType: 'Tip',
       types
     }
-    /*
        console.log(
        signTypedData(
        SigningKey(),
@@ -140,7 +141,6 @@ describe("ReceiverPaysFacet", async () => {
        message
        )
        )
-     */
     const signature:string = await accounts[2]._signTypedData(
       domain,
       ethersTipType,
@@ -179,13 +179,13 @@ describe("ReceiverPaysFacet", async () => {
     expect(claimerDeposits1.add(hundredCaw)).to.equal(claimerDeposits2)
     expect(senderDeposits1.sub(hundredCaw)).to.equal(senderDeposits2)
 
+
+  })
+     */
+
     /*
 
-     */
-  })
-
-
-  it("", async () => {
+  it("attempt at ", async () => {
     const thousandCaw = ethers.utils.parseEther('1000')
     const hundredCaw = ethers.utils.parseEther('100')
 
@@ -232,7 +232,6 @@ describe("ReceiverPaysFacet", async () => {
         { name: 'tips', type: 'Tip[]' },
         { name: 'tipsigs', type: 'bytes[]' },
         { name: 'iterator', type: 'uint256' }
-
       ],
       Tip: [
         { name: 'senderNftId', type: 'uint256' },
@@ -311,14 +310,14 @@ describe("ReceiverPaysFacet", async () => {
     // claimer signing the package
     const wallet = ethers.Wallet.createRandom()
     console.log('========================')
-   console.log(
-     await signTypedData(
-       new SigningKey(wallet.privateKey),
-       domain,
-       ethersTipChainType,
-       message
-     )
-   )
+    console.log(
+      await signTypedData(
+        new SigningKey(wallet.privateKey),
+        domain,
+        ethersTipChainType,
+        message
+      )
+    )
 
     console.log('========================')
     const signature:string = await accounts[1]._signTypedData(
@@ -326,8 +325,6 @@ describe("ReceiverPaysFacet", async () => {
       ethersTipChainType,
       message
     )
-    console.log(ethersTipChainType)
-    console.log(signature)
 
     const signatureSans0x = signature.substring(2)
     const r = '0x' + signatureSans0x.substring(0,64);
@@ -355,8 +352,76 @@ describe("ReceiverPaysFacet", async () => {
     )
 
     assert.fail('issues aligning abi encodes for nested structs, arbitrary tip length makes abi.encodepacked with a ... operator difficult, going to to research merkle tree methods, or add iterator to message, lets try that')
-    /*
-     */
   })
 
+     */
+  it("nested struct test", async () => {
+    const thousandCaw = ethers.utils.parseEther('1000')
+    const hundredCaw = ethers.utils.parseEther('100')
+    const chainId = (await ethers.provider.getNetwork()).chainId
+
+    const domain =  {
+      chainId: chainId,
+      name: 'Cawdrivium',
+      verifyingContract: diamondAddress,
+      version: '1'
+    }
+    const deadline = Math.floor(new Date().getTime() / 1000) + 3600
+
+    const types: MessageTypes = {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
+      Thing: [
+        {name: 'id', type: 'uint256'}
+      ],
+      Things: [
+        {name:'things', type: 'Thing[]'}
+      ]
+    }
+
+    const ethersThingType = {
+      Thing: [
+        {name: 'id', type: 'uint256'}
+      ],
+      Things: [
+        {name:'things', type: 'Thing[]'}
+      ]
+    }
+
+    const message = {
+      things: [{id:1}, {id:2}]  
+    }
+
+    const signature:string = await accounts[1]._signTypedData(
+      domain,
+      ethersThingType,
+      message
+    )
+    console.log(signature)
+
+    const msgParams: TypedMessage<MessageTypes> = {
+      domain,
+      message,
+      primaryType: 'Things',
+      types
+    }
+    const recoverAddr = recoverTypedSignature({data: msgParams, signature, version: SignTypedDataVersion.V4 })
+    console.log(accounts[1].address, recoverAddr)
+
+    const signatureSans0x = signature.substring(2)
+    const r = '0x' + signatureSans0x.substring(0,64);
+    const s = '0x' + signatureSans0x.substring(64,128);
+    const v = parseInt(signatureSans0x.substring(128,130), 16)
+
+    await receiverPaysFacet.connect(accounts[1]).claimThings(
+      v,
+      r,
+      s,
+      message
+    )
+  })
 })

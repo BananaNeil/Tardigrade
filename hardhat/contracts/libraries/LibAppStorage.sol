@@ -16,6 +16,14 @@ struct Tip {
   uint256 amount;
 }
 
+struct Thing {
+  uint256 id;
+}
+
+struct Things {
+  Thing[] things;
+}
+
 struct AppStorage {
   address burn;
   address caw;
