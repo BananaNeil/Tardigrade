@@ -16,6 +16,13 @@ struct Tip {
   uint256 amount;
 }
 
+struct TipChain {
+  uint256 claimerNftId;
+  uint256 deadline;
+  Tip[] tips;
+  bytes[] tipSigs;
+}
+
 struct Thing {
   uint256 id;
 }
