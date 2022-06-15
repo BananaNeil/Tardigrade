@@ -17,23 +17,12 @@ contract CawFacet {
     uint256 nftId
   ) external {
     AppStorage storage st = LibAppStorage.diamondStorage();
-    require(st.nftBalances[nftId][msg.sender] > 0, "CawFacet::must caw from onesown NFT");
+    require(st.nftIdBalances[nftId][msg.sender] > 0, "CawFacet::must caw from onesown NFT");
     require(st.nftIdCawDeposits[nftId] >= 5000, 'CawFacet::Insufficient Caw');
     uint256 chainId;
     assembly {
       chainId := chainid()
     }
-    bytes32 eip712DomainHash = keccak256(
-      abi.encode(
-        keccak256(
-          "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
-        ),
-        keccak256(bytes("Cawdrivium")),
-        keccak256(bytes("1")),
-        chainId,
-        address(this)
-      )
-    );
 
     bytes32 hashStruct = keccak256(
       abi.encode(
@@ -43,7 +32,7 @@ contract CawFacet {
       )
     );
 
-    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
+    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", st.eip712DomainHash, hashStruct));
     address signer = ecrecover(hash, v,r,s);
     console.log('signer', signer);
     //require(signer == msg.sender, "signer is not owner of this nft");

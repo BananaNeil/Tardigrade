@@ -14,7 +14,7 @@ contract UsernameFacet is IERC1155, Modifiers {
   function balanceOf(address account, uint256 id) external view returns (uint256) {
     AppStorage storage s = LibAppStorage.diamondStorage();
     require (account != address(0), "ERC1155: burn addr not a valid owner");
-    return s.nftBalances[id][account];
+    return s.nftIdBalances[id][account];
   }
 
   function balanceOfBatch(address[] memory accounts, uint256[] memory ids) external view returns (uint256[] memory) {
@@ -22,7 +22,7 @@ contract UsernameFacet is IERC1155, Modifiers {
     require(accounts.length == ids.length, "ERC1155: accounts and ids length mismatch");
     uint256[] memory batchBalances = new uint256[](accounts.length);
     for (uint256 i = 0; i < accounts.length; ++i) {
-      batchBalances[i] = s.nftBalances[ids[i]][accounts[i]];
+      batchBalances[i] = s.nftIdBalances[ids[i]][accounts[i]];
     }
 
     return batchBalances;
@@ -62,12 +62,12 @@ contract UsernameFacet is IERC1155, Modifiers {
     amounts[0] = amount;
 
 
-    uint256 fromBalance = s.nftBalances[id][from];
+    uint256 fromBalance = s.nftIdBalances[id][from];
     require(fromBalance >= amount, "ERC1155: insufficient balance for transfer");
     unchecked {
-      s.nftBalances[id][from] = fromBalance - amount;
+      s.nftIdBalances[id][from] = fromBalance - amount;
     }
-    s.nftBalances[id][to] += amount;
+    s.nftIdBalances[id][to] += amount;
 
     emit TransferSingle(operator, from, to, id, amount);
 
@@ -95,12 +95,12 @@ contract UsernameFacet is IERC1155, Modifiers {
       uint256 id = ids[i];
       uint256 amount = amounts[i];
 
-      uint256 fromBalance = s.nftBalances[id][from];
+      uint256 fromBalance = s.nftIdBalances[id][from];
       require(fromBalance >= amount, "ERC1155: insufficient balance for transfer");
       unchecked {
-        s.nftBalances[id][from] = fromBalance - amount;
+        s.nftIdBalances[id][from] = fromBalance - amount;
       }
-      s.nftBalances[id][to] += amount;
+      s.nftIdBalances[id][to] += amount;
     }
 
     emit TransferBatch(operator, from, to, ids, amounts);
@@ -168,7 +168,7 @@ contract UsernameFacet is IERC1155, Modifiers {
     uint256[] memory amounts = new uint256[](1);
     amounts[0] = amount;
 
-    s.nftBalances[id][to] += amount;
+    s.nftIdBalances[id][to] += amount;
     emit TransferSingle(operator, address(0), to, id, amount);
 
     _doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);

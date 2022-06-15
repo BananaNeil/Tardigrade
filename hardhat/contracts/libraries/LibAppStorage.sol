@@ -42,7 +42,7 @@ struct AppStorage {
   mapping(uint256 => string) nftIdToUsername;
   mapping(uint256 => address) nftIdToAddress;
   uint256 nextNftId;
-  mapping(uint256 => mapping(address => uint256)) nftBalances;
+  mapping(uint256 => mapping(address => uint256)) nftIdBalances;
   mapping(address => mapping(address => bool)) operatorApprovals;
   string uri;
   // signature sends
@@ -53,6 +53,10 @@ struct AppStorage {
   uint256 stakePoolCaw;
   uint256 stakePoolCawUSDC;
 
+  bytes32 eip712DomainHash;
+
+  bytes32 tipChainTypeHash;
+  bytes32 tipTypeHash;
 
 }
 

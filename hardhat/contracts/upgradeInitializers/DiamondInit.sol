@@ -47,7 +47,28 @@ contract DiamondInit {
       s.usernameCostTable[i] = usernameCostTable[i];
     }
     s.caw = caw;
+    //https://etherscan.io/address/0x000000000000000000000000000000000000dead
     s.burn = 0x000000000000000000000000000000000000dEaD; //zero address was prevent Transfer in ERC20Standard token
+
+    uint256 chainId;
+    assembly {
+      chainId := chainid()
+    }
+
+    s.eip712DomainHash = keccak256(
+      abi.encode(
+        keccak256(
+          "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+        ),
+        keccak256(bytes("Cawdrivium")),
+        keccak256(bytes("1")),
+        chainId,
+        address(this)
+      )
+    );
+
+    s.tipChainTypeHash = keccak256("TipChain(uint256 claimerNftId,uint256 deadline,Tip[] tips,bytes[] tipSigs)Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)");
+    s.tipTypeHash = keccak256("Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)");
   }
 
 

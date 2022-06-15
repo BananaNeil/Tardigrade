@@ -12,7 +12,7 @@ contract ReceiverPaysFacet is Modifiers {
     // withdraw ability users may want to partition off deposit sets
     // Probably should do erc-712 permits for the approvals too lol
     AppStorage storage s = LibAppStorage.diamondStorage();
-    require(s.nftBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to deposit into the nft wallet");
+    require(s.nftIdBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to deposit into the nft wallet");
     IERC20(s.caw).transferFrom(msg.sender, address(this), amount);
     s.nftIdCawDeposits[nftId] += amount;
   }
@@ -23,7 +23,7 @@ contract ReceiverPaysFacet is Modifiers {
     // a user who is desiring to withdraw caw from their Username NFT will have to trigger the NFTWithdrawLock(), and wait till the dealine to begin withdrawing
     // If the Signature sends contain a constant time delay, 
     AppStorage storage s = LibAppStorage.diamondStorage();
-    require(s.nftBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to withdraw out of the nft wallet");
+    require(s.nftIdBalances[nftId][msg.sender] == 1, "ReceiverPaysFacet::must own nft to withdraw out of the nft wallet");
     uint256 nftIdDeposits = s.nftIdCawDeposits[nftId];
     require(nftIdDeposits >= amount, "ReceiverPaysFacet:: cannot withdraw more than put in");
     IERC20(s.caw).transferFrom(msg.sender, address(this), amount);
@@ -43,7 +43,7 @@ contract ReceiverPaysFacet is Modifiers {
   function claimPayment(uint256 nftid, uint256 amount, uint256 nonce, bytes memory signature) external {
     AppStorage storage s = LibAppStorage.diamondStorage();
 
-    uint256 nft = s.nftBalances[nftid][msg.sender];
+    uint256 nft = s.nftIdBalances[nftid][msg.sender];
     address owner = s.nftIdToAddress[nftid];
     require(nft > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
 
@@ -105,53 +105,6 @@ contract ReceiverPaysFacet is Modifiers {
     return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
   }
 
-  function claimPayment(
-    uint8 v,
-    bytes32 r,
-    bytes32 s,
-    uint256 claimerNftId,
-    uint256 senderNftId,
-    uint256 deadline,
-    uint256 amount
-  ) external {
-    AppStorage storage st = LibAppStorage.diamondStorage();
-
-    require(st.nftIdCawDeposits[senderNftId] >= amount, "ReceiverPayFacet::sender doesn't have enough deposits");
-
-    uint256 chainId;
-    assembly {
-      chainId := chainid()
-    }
-
-    bytes32 eip712DomainHash = keccak256(
-      abi.encode(
-        keccak256(
-          "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
-    ),
-    keccak256(bytes("Cawdrivium")),
-    keccak256(bytes("1")),
-    chainId,
-    address(this)
-    )
-    );
-
-    bytes32 hashStruct = keccak256(
-      abi.encode(
-        keccak256("Tip(uint256 senderNftId,uint256 claimerNftId,uint256 amount,uint256 deadline)"),
-        senderNftId,
-        claimerNftId,
-        amount,
-        deadline
-    )
-    );
-
-    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
-    address signer = ecrecover(hash, v, r, s);
-    require(signer == st.nftIdToAddress[senderNftId], "signer no equal sender");
-    require(signer != address(0), "signer equal addr(0)");
-    st.nftIdCawDeposits[senderNftId] -= amount;
-    st.nftIdCawDeposits[claimerNftId] += amount;
-  }
 
   /* Deadline is interesting constraint
   Thinking about providing a 1 day, 1 week, or even 1 month bus load time
@@ -169,11 +122,12 @@ contract ReceiverPaysFacet is Modifiers {
   }
 
   function hashTips(Tip[] memory tips) internal returns (bytes32) {
+    AppStorage storage st = LibAppStorage.diamondStorage();
     bytes memory packed;
     for (uint i =0; i < tips.length ; i++) {
       bytes32 hashStruct = keccak256(
         abi.encode(
-          keccak256("Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)"),
+          st.tipTypeHash,
           tips[i].senderNftId,
           tips[i].amount,
           tips[i].senderNonce
@@ -193,34 +147,18 @@ contract ReceiverPaysFacet is Modifiers {
   ) external {
     AppStorage storage st = LibAppStorage.diamondStorage();
     // It will delightfully more efficient if users come together to make a big sig send that a user can claim in a single sweep
-    require(st.nftBalances[tipChain.claimerNftId][msg.sender] > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
+    require(st.nftIdBalances[tipChain.claimerNftId][msg.sender] > 0, "ReceiverPayFacet::msg.sender must own nft to claim");
 
-    uint256 chainId;
-    assembly {
-      chainId := chainid()
-    }
-
-    bytes32 eip712DomainHash = keccak256(
-      abi.encode(
-        keccak256(
-          "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
-    ),
-    keccak256(bytes("Cawdrivium")),
-    keccak256(bytes("1")),
-    chainId,
-    address(this)
-    )
-    );
     bytes32 hashStruct = keccak256(
       abi.encode(
-        keccak256("TipChain(uint256 claimerNftId,uint256 deadline,Tip[] tips,bytes[] tipSigs)Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)"),
+        st.tipChainTypeHash,
         tipChain.claimerNftId,
         tipChain.deadline,
         hashTips(tipChain.tips),
         hashTipSigs(tipChain.tipSigs)
     )
     );
-    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
+    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", st.eip712DomainHash, hashStruct));
     //console.log(ecrecover(hash,v,r,s), 'ecrecover');
     //console.log(ECDSA.recover(hash, v, r, s));
     //console.log('^ ecdsa reover');
@@ -230,14 +168,14 @@ contract ReceiverPaysFacet is Modifiers {
     for (uint i=0;i < tipChain.tips.length; i++) {
       bytes32 hashStruct = keccak256(
         abi.encode(
-          keccak256("Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)"),
+          st.tipTypeHash,
           tipChain.tips[i].senderNftId,
           tipChain.tips[i].amount,
           tipChain.tips[i].senderNonce
         )
       );
       address signer = recoverSigner(
-        keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct)),
+        keccak256(abi.encodePacked("\x19\x01", st.eip712DomainHash, hashStruct)),
         tipChain.tipSigs[i]
       );
       console.log('tip signer', signer);
@@ -285,17 +223,6 @@ contract ReceiverPaysFacet is Modifiers {
       chainId := chainid()
     }
 
-    bytes32 eip712DomainHash = keccak256(
-      abi.encode(
-        keccak256(
-          "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
-    ),
-    keccak256(bytes("Cawdrivium")),
-    keccak256(bytes("1")),
-    chainId,
-    address(this)
-    )
-    );
     // Yay, its abi.encodePacked(string of array :')))
     // reminder to consider warning in: https://docs.soliditylang.org/en/v0.8.14/abi-spec.html#non-standard-packed-mode
     bytes32 hashThings = keccak256(
@@ -306,7 +233,7 @@ contract ReceiverPaysFacet is Modifiers {
     );
 
 
-    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashThings));
+    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", st.eip712DomainHash, hashThings));
     address signer = ecrecover(hash, v, r, s);
     console.log('facet::', signer, msg.sender);
   }
