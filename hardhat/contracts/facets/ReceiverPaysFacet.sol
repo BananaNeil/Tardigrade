@@ -41,7 +41,7 @@ contract ReceiverPaysFacet is Modifiers {
 
   /*
   function claimPayment(uint256 nftid, uint256 amount, uint256 nonce, bytes memory signature) external {
-  AppStorage storage s = LibAppStorage.diamondStorage();
+    AppStorage storage s = LibAppStorage.diamondStorage();
 
     uint256 nft = s.nftBalances[nftid][msg.sender];
     address owner = s.nftIdToAddress[nftid];
@@ -50,14 +50,14 @@ contract ReceiverPaysFacet is Modifiers {
     require(!s.nftUsedNonces[nftid][nonce]);
     s.nftUsedNonces[nftid][nonce] = true;
 
-  // this recreates the message that was signed on the client
-  bytes32 message = prefixed(keccak256(abi.encodePacked(msg.sender, nftid, amount, nonce, this)));
-  require(recoverSigner(message, signature) == owner);
-  IERC20(s.caw).transfer(msg.sender, amount);
-  //payable(msg.sender).transfer(amount);
-  }
+    // this recreates the message that was signed on the client
+    bytes32 message = prefixed(keccak256(abi.encodePacked(msg.sender, nftid, amount, nonce, this)));
+    require(recoverSigner(message, signature) == owner);
+    IERC20(s.caw).transfer(msg.sender, amount);
+    //payable(msg.sender).transfer(amount);
+}
 
-    */
+*/
 
   /// destroy the contract and reclaim the leftover funds.
   /*mudgen — 16/03/2022
@@ -65,10 +65,10 @@ contract ReceiverPaysFacet is Modifiers {
 
 
   function shutdown() external onlyOwner  {
-  // I wonder what happens with self destruct and diamonds
-  selfdestruct(payable(address(0)));
+    // I wonder what happens with self destruct and diamonds
+    selfdestruct(payable(address(0)));
   }a
-   */
+  */
 
   /// signature methods.
   function splitSignature(bytes memory sig)
@@ -171,15 +171,16 @@ contract ReceiverPaysFacet is Modifiers {
   function hashTips(Tip[] memory tips) internal returns (bytes32) {
     bytes memory packed;
     for (uint i =0; i < tips.length ; i++) {
-    bytes32 hashStruct = keccak256(
-      abi.encode(
-        keccak256("Tip(uint256 senderNftId,uint256 amount)"),
-        tips[i].senderNftId,
-        tips[i].amount
+      bytes32 hashStruct = keccak256(
+        abi.encode(
+          keccak256("Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)"),
+          tips[i].senderNftId,
+          tips[i].amount,
+          tips[i].senderNonce
       )
-    );
-   //type no supported in packed mode
-     packed = abi.encodePacked(packed, hashStruct); 
+      );
+      //type no supported in packed mode
+      packed = abi.encodePacked(packed, hashStruct); 
     }
     return keccak256(packed);
   }
@@ -212,12 +213,12 @@ contract ReceiverPaysFacet is Modifiers {
     );
     bytes32 hashStruct = keccak256(
       abi.encode(
-        keccak256("TipChain(uint256 claimerNftId,uint256 deadline,Tip[] tips,bytes[] tipSigs)Tip(uint256 senderNftId,uint256 amount)"),
+        keccak256("TipChain(uint256 claimerNftId,uint256 deadline,Tip[] tips,bytes[] tipSigs)Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)"),
         tipChain.claimerNftId,
         tipChain.deadline,
         hashTips(tipChain.tips),
         hashTipSigs(tipChain.tipSigs)
-      )
+    )
     );
     bytes32 hash = keccak256(abi.encodePacked("\x19\x01", eip712DomainHash, hashStruct));
     //console.log(ecrecover(hash,v,r,s), 'ecrecover');
@@ -229,9 +230,10 @@ contract ReceiverPaysFacet is Modifiers {
     for (uint i=0;i < tipChain.tips.length; i++) {
       bytes32 hashStruct = keccak256(
         abi.encode(
-          keccak256("Tip(uint256 senderNftId,uint256 amount)"),
+          keccak256("Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)"),
           tipChain.tips[i].senderNftId,
-          tipChain.tips[i].amount
+          tipChain.tips[i].amount,
+          tipChain.tips[i].senderNonce
         )
       );
       address signer = recoverSigner(
@@ -242,26 +244,30 @@ contract ReceiverPaysFacet is Modifiers {
 
       console.log(signer, 'tips loop');
       if (signer == st.nftIdToAddress[tipChain.tips[i].senderNftId]) {
+        if (st.nftIdUsedNonces[tipChain.tips[i].senderNftId] <= tipChain.tips[i].senderNonce) {
         st.nftIdCawDeposits[tipChain.tips[i].senderNftId] -= tipChain.tips[i].amount;
         st.nftIdCawDeposits[tipChain.claimerNftId] += tipChain.tips[i].amount;
+        st.nftIdUsedNonces[tipChain.tips[i].senderNftId]++;
+
+        }
       } else {
         console.log('signature no in, handle faulty situation');
       }
     }
   }
 
- /* 
- nice for understanding how the nested Array of structs worked
+  /* 
+  nice for understanding how the nested Array of structs worked
   function hashThings(Things memory things) internal returns (bytes32) {
     bytes memory packed;
     for (uint i =0; i < things.things.length ; i++) {
-    bytes32 hashThing = keccak256(
-      abi.encode(
-        keccak256("Thing(uint256 id)"),
-        things.things[i]
-    )
-    );
-     packed = abi.encodePacked(packed, hashThing); 
+      bytes32 hashThing = keccak256(
+        abi.encode(
+          keccak256("Thing(uint256 id)"),
+          things.things[i]
+      )
+      );
+      packed = abi.encodePacked(packed, hashThing); 
     }
     return keccak256(packed);
   }
@@ -296,7 +302,7 @@ contract ReceiverPaysFacet is Modifiers {
       abi.encode(
         keccak256("Things(Thing[] things)Thing(uint256 id)"),
         hashThings(things)
-      )
+    )
     );
 
 
@@ -305,6 +311,6 @@ contract ReceiverPaysFacet is Modifiers {
     console.log('facet::', signer, msg.sender);
   }
 
-   */
+  */
 
 }

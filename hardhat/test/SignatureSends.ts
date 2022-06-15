@@ -224,6 +224,7 @@ describe("ReceiverPaysFacet", async () => {
       Tip: [
         { name: 'senderNftId', type: 'uint256' },
         { name: 'amount', type: 'uint256' },
+        { name: 'senderNonce', type: 'uint256' }
       ]
     }
 
@@ -237,12 +238,14 @@ describe("ReceiverPaysFacet", async () => {
       Tip: [
         { name: 'senderNftId', type: 'uint256' },
         { name: 'amount', type: 'uint256' },
+        { name: 'senderNonce', type: 'uint256' }
       ]
     }
     const ethersTipType = { // Tried to be ergonomic by providing EIP712 domain
       Tip: [
         { name: 'senderNftId', type: 'uint256' },
         { name: 'amount', type: 'uint256' },
+        { name: 'senderNonce', type: 'uint256' }
       ]
     }
     // love to see an ipfs hash chain as these,
@@ -256,7 +259,8 @@ describe("ReceiverPaysFacet", async () => {
     // account 3 leaves a tip in claimer tip jar,
     const acc3Tip = {
       senderNftId: Number(acc3NftId),
-      amount: hundredCaw.toString()
+      amount: hundredCaw.toString(),
+      senderNonce: 0 // Nonce does not get iterated until claim, so pass current nonce in orbitdb, orbit-db bus meta
     }
     message.tips.push(acc3Tip)
 
@@ -272,7 +276,8 @@ describe("ReceiverPaysFacet", async () => {
     // account 2 leaves a tip in the claimer tip jar 
     const acc2Tip = {
       senderNftId: Number(acc2NftId),
-      amount: hundredCaw.toString()
+      amount: hundredCaw.toString(),
+      senderNonce: 0
     }
     message.tips.push(acc2Tip)
 
@@ -292,7 +297,7 @@ describe("ReceiverPaysFacet", async () => {
     }
 
     // claimer signing the package
-   /* 
+   /* splice out of the ethers _signTypedData() in case needed
     const wallet = ethers.Wallet.createRandom()
     
     console.log('========================')
@@ -301,7 +306,7 @@ describe("ReceiverPaysFacet", async () => {
         new SigningKey(wallet.privateKey),
         domain,
         ethersTipChainType,
-        message
+          message
       )
     )
 
@@ -338,11 +343,27 @@ describe("ReceiverPaysFacet", async () => {
     expect(claimerDeposits1.add(hundredCaw).add(hundredCaw)).to.equal(claimerDeposits2)
     expect(acc2Deposits1.sub(hundredCaw)).to.equal(acc2Deposits2)
     expect(acc3Deposits1.sub(hundredCaw)).to.equal(acc3Deposits2)
+  
+    // Running again does not increase payout, blocked by Nonces
+    await receiverPaysFacet.connect(accounts[1]).claimTipChain(
+      v,
+      r,
+      s,
+      message
+    )
+    const acc3Deposits3 = await receiverPaysFacet.getCawDepositsByNftId(acc3NftId)
+    const acc2Deposits3 = await receiverPaysFacet.getCawDepositsByNftId(acc2NftId)
+    const claimerDeposits3 = await receiverPaysFacet.getCawDepositsByNftId(claimerNftId)
+    expect(claimerDeposits2).to.equal(claimerDeposits3)
+    expect(acc2Deposits2).to.equal(acc2Deposits3)
+    expect(acc3Deposits2).to.equal(acc3Deposits3)
 
 
   })
 
-
+  it("Block gas limit stuff", async () => {
+    // If a message gets super long, it is logical it will putter out
+  })
 
 
 

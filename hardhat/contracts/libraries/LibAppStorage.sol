@@ -14,6 +14,7 @@ import {LibDiamond} from './LibDiamond.sol';
 struct Tip {
   uint256 senderNftId;
   uint256 amount;
+  uint256 senderNonce;
 }
 
 struct TipChain {
@@ -46,7 +47,7 @@ struct AppStorage {
   string uri;
   // signature sends
   // nftid => nonce => true
-  mapping(uint256 => mapping(uint256 => bool)) nftUsedNonces;
+  mapping(uint256 => uint256)  nftIdUsedNonces;
   mapping(uint256 => uint256) nftIdCawDeposits;
   // StakePool
   uint256 stakePoolCaw;
