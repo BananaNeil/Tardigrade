@@ -361,8 +361,30 @@ describe("ReceiverPaysFacet", async () => {
 
   })
 
+  it("Try generate hash collisions by spoofing v, r, s inputs", async () =>{
+    // initial signatures are decomposed into r,s,v components before hitting the chain to save gas
+    // Remember reading an article that its easy to create collisions by byte swapping parts from v and r
+    // find that paper
+    // see if possible
+  })
+
+  it("Try to spoof the encodePacked signatures", async () => {
+    /*If you use keccak256(abi.encodePacked(a, b)) and both a and b are dynamic types, it is easy to craft collisions in the hash value by moving parts of a into b and vice-versa. More specifically, abi.encodePacked("a", "bc") == abi.encodePacked("ab", "c"). If you use abi.encodePacked for signatures, authentication or data integrity, make sure to always use the same types and check that at most one of them is dynamic. Unless there is a compelling reason, abi.encode should be preferred. */
+  })
+
   it("Block gas limit stuff", async () => {
     // If a message gets super long, it is logical it will putter out
+    // What would be the max length of a message? what hits 30 mil gas
+    // is there variation in gas based on params, what are the variations
+    // gas optimization considerations
+  })
+
+  it("Hub model exploration", async () => {
+    // Current ClaimTipChain functionality only becomes efficient once a user gets alot of high value tips
+    // While doing a daily, weekly, and monthly deposit timelock deadlines may help new users get efficient, it costs time
+    // Another way could be use a pancakeswap style harvest() function, and a non user specific tip chain, so when the message gets to max length, anyone can run the signature in exchange for an onchain network incentive
+    // Intuitions tells me to look closely at merkle trees
+    // https://medium.com/@ItsCuzzo/using-merkle-trees-for-nft-whitelists-523b58ada3f9
   })
 
 

@@ -5,7 +5,7 @@ import '@nomiclabs/hardhat-ethers'
 
 import chai from "chai";
 import { solidity } from "ethereum-waffle";
-
+import 'hardhat-gas-reporter'
 chai.use(solidity);
 // This is a sample Hardhat task. To learn how to create your own go to
 // // https://hardhat.org/guides/create-task.html
@@ -43,5 +43,8 @@ module.exports = {
     hardhat: {
       chainId: 31337,
     }
+  },
+  gasReporter: {
+    enabled: false
   }
 }
