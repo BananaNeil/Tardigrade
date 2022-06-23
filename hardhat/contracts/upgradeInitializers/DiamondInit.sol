@@ -69,6 +69,10 @@ contract DiamondInit {
 
     s.tipChainTypeHash = keccak256("TipChain(uint256 claimerNftId,uint256 deadline,Tip[] tips,bytes[] tipSigs)Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)");
     s.tipTypeHash = keccak256("Tip(uint256 senderNftId,uint256 amount,uint256 senderNonce)");
+
+    s.groupTipChainTypeHash = keccak256("GroupTipChain(uint256 deadline,GroupTip[] tips,bytes[] tipSigs)GroupTip(uint256 senderNftId,uint256 receiverNftId,uint256 amount,uint256 senderNonce,uint256 receiverNonce)");
+    s.groupTipTypeHash = keccak256("GroupTip(uint256 senderNftId,uint256 receiverNftId,uint256 amount,uint256 senderNonce,uint256 receiverNonce)");
+    
   }
 
 

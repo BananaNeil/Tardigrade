@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "@metamask/eth-sig-util": "^4.0.1",
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "merkletreejs": "^0.2.32"
   }
 }

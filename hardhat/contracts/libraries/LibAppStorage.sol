@@ -24,6 +24,21 @@ struct TipChain {
   bytes[] tipSigs;
 }
 
+struct GroupTip {
+  uint256 senderNftId;
+  uint256 receiverNftId;
+  uint256 amount;
+  uint256 senderNonce;
+  uint256 receiverNonce;
+}
+
+struct GroupTipChain {
+  uint256 deadline;
+  GroupTip[] tips;
+  bytes[] tipSigs;
+}
+
+
 struct Thing {
   uint256 id;
 }
@@ -57,6 +72,9 @@ struct AppStorage {
 
   bytes32 tipChainTypeHash;
   bytes32 tipTypeHash;
+
+  bytes32 groupTipChainTypeHash;
+  bytes32 groupTipTypeHash;
 
 }
 

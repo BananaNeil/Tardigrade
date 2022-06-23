@@ -1,6 +1,18 @@
 pragma solidity 0.8.14;
 
-import { LibAppStorage, AppStorage, Modifiers, Tip, TipChain, Thing, Things } from '../libraries/LibAppStorage.sol';
+import {
+  LibAppStorage,
+  AppStorage,
+  Modifiers,
+  Tip,
+  TipChain,
+  GroupTip,
+  GroupTipChain, 
+  GroupTip,
+  Thing,
+  Things
+} from '../libraries/LibAppStorage.sol';
+
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
@@ -192,6 +204,45 @@ contract ReceiverPaysFacet is Modifiers {
         console.log('signature no in, handle faulty situation');
       }
     }
+  }
+
+  function hashGroupTips(GroupTip[] memory tips) internal returns (bytes32) {
+    AppStorage storage st = LibAppStorage.diamondStorage();
+    bytes memory packed;
+    for (uint i =0; i < tips.length ; i++) {
+      bytes32 hashStruct = keccak256(
+        abi.encode(
+          st.groupTipTypeHash,
+          tips[i].senderNftId,
+          tips[i].receiverNftId,
+          tips[i].amount,
+          tips[i].senderNonce,
+          tips[i].receiverNonce
+        )
+      );
+      //type no supported in packed mode
+      packed = abi.encodePacked(packed, hashStruct); 
+    }
+    return keccak256(packed);
+  }
+
+  function harvestGroupTipChain(
+    bytes memory signature,
+    GroupTipChain memory groupTipChain
+  ) external {
+    AppStorage storage st = LibAppStorage.diamondStorage();
+    
+    bytes32 hashStruct = keccak256(
+      abi.encode(
+        st.groupTipChainTypeHash,
+        groupTipChain.deadline,
+        hashGroupTips(groupTipChain.tips),
+        hashTipSigs(groupTipChain.tipSigs)
+      )
+    );
+    bytes32 hash = keccak256(abi.encodePacked("\x19\x01", st.eip712DomainHash, hashStruct));
+    (uint8 v, bytes32 r, bytes32 s) = splitSignature(signature);
+    require(ecrecover(hash, v, r, s) == msg.sender, "harvest Group chain is signed by msg.sender");
   }
 
   /* 
