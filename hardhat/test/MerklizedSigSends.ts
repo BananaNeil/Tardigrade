@@ -38,13 +38,13 @@ describe("ReceiverPaysFacet", async () => {
   let cawAddress: string
   let cawToken:any
   let usernameFacet:any
-  let receiverPaysFacet:any
+  let merklizedSigSendsFacet:any
   before(async () => {
     accounts = await ethers.getSigners();
     ;({diamond: diamondAddress, caw:cawAddress} = await deployDiamond())
     cawToken = await ethers.getContractAt('StandardERC20', cawAddress)
     usernameFacet = await ethers.getContractAt('UsernameFacet', diamondAddress, accounts[0])
-    receiverPaysFacet = await ethers.getContractAt('ReceiverPaysFacet', diamondAddress, accounts[0])
+    merklizedSigSendsFacet = await ethers.getContractAt('MerklizedSigSendsFacet', diamondAddress, accounts[0])
     const trillionCaw = ethers.utils.parseEther('1000000000000')
     const billionCaw = ethers.utils.parseEther('1000000000')
     await Promise.all(

@@ -38,6 +38,25 @@ struct GroupTipChain {
   bytes[] tipSigs;
 }
 
+struct MerkleTip {
+  uint256 senderNftId;
+  uint256 amount;
+}
+struct MerkleTipTree {
+  uint256 receiverNftId;
+  uint256 receiverNonce;
+  uint256 deadline;
+  MerkleTip[] tips;
+  bytes[] tipSigs;
+}
+
+struct MerkleTipTreeProof {
+  MerkleTipTree merkleTipTree;
+  bytes32[] proofs;
+  bool[] proofFlags;
+  bytes32[] leaves;
+  bytes32 root;
+}
 
 struct Thing {
   uint256 id;
@@ -75,6 +94,12 @@ struct AppStorage {
 
   bytes32 groupTipChainTypeHash;
   bytes32 groupTipTypeHash;
+
+  bytes32 merkleTipTypeHash;
+  bytes32 merkleTipTreeTypeHash;
+  bytes32 merkleTipTreeProofTypeHash;
+
+
 
 }
 

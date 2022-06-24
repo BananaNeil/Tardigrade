@@ -73,6 +73,11 @@ contract DiamondInit {
     s.groupTipChainTypeHash = keccak256("GroupTipChain(uint256 deadline,GroupTip[] tips,bytes[] tipSigs)GroupTip(uint256 senderNftId,uint256 receiverNftId,uint256 amount,uint256 senderNonce,uint256 receiverNonce)");
     s.groupTipTypeHash = keccak256("GroupTip(uint256 senderNftId,uint256 receiverNftId,uint256 amount,uint256 senderNonce,uint256 receiverNonce)");
     
+    s.merkleTipTypeHash = keccak256("MerkleTip(uint256 senderNftId,uint256 amount)");
+    s.merkleTipTreeTypeHash = keccak256('MerkleTipTree(uint256 receiverNftId,uint256 receiverNonce,uint256 deadline,MerkleTip[] tips,bytes[] tipSigs)MerkleTip(uint256 senderNftId,uint256 amount)');
+    s.merkleTipTreeProofTypeHash = keccak256('MerkleTipTreeProof(MerkleTipTree merkleTipTree,bytes32[] proofs,bool[] proofFlags,bytes32[] leaves,bytes32 root)MerkleTipTree(uint256 receiverNftId,uint256 receiverNonce,uint256 deadline,MerkleTip[] tips,bytes[] tipSigs)MerkleTip(uint256 senderNftId,uint256 amount)');
+  
+  
   }
 
 
