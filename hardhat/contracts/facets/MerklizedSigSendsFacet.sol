@@ -32,6 +32,10 @@ contract MerklizedSigSendsFacet is Modifiers {
 	 * sibling hashes on the branch from the leaf to the root of the tree. Each
 	 * pair of leaves and each pair of pre-images are assumed to be sorted.
 	 */
+  /**
+  * Leafs could be TipChains
+  * user can consume their leaves 
+  */
 	function verify(
 			bytes32[] memory proof,
 			bytes32 root,
@@ -89,10 +93,10 @@ contract MerklizedSigSendsFacet is Modifiers {
 			* _Available since v4.7._
 		*/
 	function multiProofVerify(
-		bytes32[] calldata proof,
-		bool[] calldata proofFlags,
+		bytes32[] memory proof,
+		bool[] memory proofFlags,
 		bytes32 root,
-		bytes32[] calldata leaves
+		bytes32[] memory leaves
 	) internal pure returns (bool) {
 		return processMultiProof(proof, proofFlags, leaves) == root;
 	}
@@ -105,9 +109,9 @@ contract MerklizedSigSendsFacet is Modifiers {
 		* _Available since v4.7._
 	*/
 	function processMultiProof(
-		bytes32[] calldata proof,
-		bool[] calldata proofFlags,
-		bytes32[] calldata leaves
+		bytes32[] memory proof,
+		bool[] memory proofFlags,
+		bytes32[] memory leaves
 	) internal pure returns (bytes32 merkleRoot) {
 		// This function rebuild the root hash by traversing the tree up from the leaves. The root is rebuilt by
 		// consuming and producing values on a queue. The queue starts with the `leaves` array, then goes onto the
@@ -162,7 +166,7 @@ contract MerklizedSigSendsFacet is Modifiers {
 	}
 
 	function claimMerkleTipTree(
-		MerkleTipTreeProof  calldata tipTreeProof
+		MerkleTipTreeProof memory tipTreeProof
 	) external {
 		AppStorage storage st = LibAppStorage.diamondStorage();
 		bool verified = multiProofVerify(
@@ -173,10 +177,8 @@ contract MerklizedSigSendsFacet is Modifiers {
 		);
 
 		require(verified, "Invalid multiproof");
-
-
-
 	}
+
 
 
 }

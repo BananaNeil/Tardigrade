@@ -12,6 +12,7 @@ import {
   MessageTypes,
   SignTypedDataVersion
 } from '@metamask/eth-sig-util';
+
 const burnAddress ='0x000000000000000000000000000000000000dEaD'
 
 const {
@@ -20,6 +21,9 @@ const {
   removeSelectors,
   findAddressPositionInFacets
 } = require('../scripts/libraries/diamond.js')
+
+const { MerkleTree  } = require('merkletreejs');
+
 
 const { deployDiamond } = require('../scripts/deploy.js')
 
@@ -31,7 +35,7 @@ function* idMaker() {
 
 
 
-describe("ReceiverPaysFacet", async () => {
+describe("MerklizedSigSends", async () => {
   let genId = idMaker()
   let accounts: SignerWithAddress[]
   let diamondAddress: string
@@ -57,7 +61,7 @@ describe("ReceiverPaysFacet", async () => {
     )
   })
 
-  it("test 1", async () => {
+  it("", async () => {
 
   })
 
