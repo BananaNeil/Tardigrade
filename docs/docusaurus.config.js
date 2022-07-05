@@ -60,7 +60,8 @@ const config = {
         title: 'Tardigrade',
         logo: {
           alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          src: 'img/tardigrade-logo.png',
+          srcDark: 'img/tardigrade-logo-invert.png'
         },
         items: [
           {to: '/blog', label: 'Blog', position: 'left'},
