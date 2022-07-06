@@ -3,7 +3,9 @@ sidebar_position: 1
 ---
 
 # Introduction
-
+## Why a ZkSnarked Social graph with timelocking deposit boxes that chains EIP-712 signatures together with IPFS Pubsub?
+Reputation can mean efficiency.  Tardigrade is the baremetal solution for enabling a class of defi 'metagames' where reputation can pose as security as its reduced in the name of efficiency.  Think like an honourbox, tip jar, bar tab, and hopefully one day, undercollateralized IOUs.  Username nodes host deposit boxes, that when staked too can than be moved over IPFS pubsub with recursive EIP-712 signature sends.
+Basic Usernames and connection data isn't terribly expensive onchain, Zksnarking persists a privacy element.  Timelocking, reputation based deposit boxes with EIP-712 signature chaining over IPFS pubsub enables a class of 'metagames' where security is compromised for efficiency in logical instances.
 Tardigrade is a set of ethereum smart contracts that lets a user create ZKSnarked username objects and deposit funds under it for defi metagames with EIP-712 message chaining over IPFS pubsub.
 
 These documents are geared for those who desired a technical level of understanding, and will go into the architecture and api spec
