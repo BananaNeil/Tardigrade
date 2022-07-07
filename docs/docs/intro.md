@@ -3,28 +3,29 @@ sidebar_position: 1
 ---
 
 # Introduction
-## Why a ZkSnarked Social graph with timelocking deposit boxes that chains EIP-712 signatures together with IPFS Pubsub?
-Reputation can mean efficiency.  Tardigrade is the baremetal solution for enabling a class of defi 'metagames' where reputation can pose as security as its reduced in the name of efficiency.  Think like an honourbox, tip jar, bar tab, and hopefully one day, undercollateralized IOUs.  Username nodes host deposit boxes, that when staked too can than be moved over IPFS pubsub with recursive EIP-712 signature sends.
-Basic Usernames and connection data isn't terribly expensive onchain, Zksnarking persists a privacy element.  Timelocking, reputation based deposit boxes with EIP-712 signature chaining over IPFS pubsub enables a class of 'metagames' where security is compromised for efficiency in logical instances.
-Tardigrade is a set of ethereum smart contracts that lets a user create ZKSnarked username objects and deposit funds under it for defi metagames with EIP-712 message chaining over IPFS pubsub.
+### Why a Social graph with timelocking deposit boxes that chains EIP-712 signatures together with IPFS Pubsub?
+:::info
+Saves gas, like riding a bus. 
+:::
+Reputation can mean efficiency.  Tardigrade enables a class of low security, high efficiency defi as the situation nessissates as sufficient.  Think things like an honourboxes, tip jars, bar tabs, and hopefully one day, undercollateralized IOUs.  A user can stake to their username and offer claims against it with ECDSA signatures.  These signatures are chained in a mother EIP-712 signature that can be consumed by a 3rd party for a network incentive.  Than users can move many more micropayments for less state transition and call gas.  Usernames event log indicies forshadow a reputation crafted over time that can be used in higher efficiency games
 
-These documents are geared for those who desired a technical level of understanding, and will go into the architecture and api spec
+### Social Graph System
 
-### What you'll need
-- [IPFS](https://github.com/ipfs/go-ipfs)
-- [Node.js](https://nodejs.org/en/download/) version 14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
-- [Metamask](https://metamask.io/)
-- [Hardhat](https://hardhat.org/)
+### Signature Chaining System
 
-- [EIP-712](https://eips.ethereum.org/EIPS/eip-712)
-- [EIP-1155](https://eips.ethereum.org/EIPS/eip-1155)
-- [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535)
+### Defi Metagames
 
-## Social Graph System
+### Example: Signature Chains on Timelocks
+A user begins by depositing a crypto of choice, say ETH beneath their username. Additionally, this deposit box is timelocked to a certain date, say 30 days from today.  During this period withdrawal is not possible, but one can write [EIP-712](https://eips.ethereum.org/EIPS/eip-712) signatures so that another user can come along later (before the deadline) claim the signature, and update the state. 
 
-## Signature Chaining System
+![deposit](deposit.png)
 
-## Create a Username & add a Connection
+ If it is many payments to the same entity within the deadline, the values are pooled in memory instead of turning the state for each on individually.  A mother EIP-712 signature chains them to max block gas. A user can harvest it, updating all the state within all the signatures, in exchange for a cryptographic reward.  Even a bot could do it, running off LP rewards.  Such signature chaining can be performed in a decentralized manner with tools like IPFS pubsub.
 
-## Send ERC20 with IPFS PubSub EIP712 Signature Chains
+![Signature-Chain](Signature-Chain.png)
+
+After the deadline timelock has passed, users can now sweep any funds that are under their usernames or relock them in a new timelock.
+
+![withdraw](withdraw.png)
+
+

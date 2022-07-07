@@ -24,6 +24,18 @@ There is many ways to skin this specification so to speak.  The current goal of 
 
 ## Technology Notes
 
+- [IPFS](https://github.com/ipfs/go-ipfs)
+- [Orbit DB](https://github.com/orbitdb/orbit-db)
+- [Node.js](https://nodejs.org/en/download/) version 14 or above:
+  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+- [Metamask](https://metamask.io/)
+- [Hardhat](https://hardhat.org/)
+
+- [EIP-712](https://eips.ethereum.org/EIPS/eip-712)
+- [EIP-1155](https://eips.ethereum.org/EIPS/eip-1155)
+- [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535)
+
+
 [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535) While the specification calls for no proxy contracts.  The developer may have been unfamiliar with a new emerging standard the Diamand multi-facet proxy.  It is possible in this standard to make the proxy immutable by removing the editing function, so one can acheive immutability while utilizing its other benefits like unlimited contract size, avoiding passing large structs between contracts, and terseness, not having to import endless interfaces.  
 
 It is the proposal of this developer that this set of contracts is too complex to yolo a one and done contract.  And that instead a *nightly* version of the protocol is build mutably on the diamond, battle tested by the community, than frozen as the current version.  Updates can be started in a new nightly diamond.
