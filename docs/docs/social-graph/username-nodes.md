@@ -1,7 +1,10 @@
+---
+sidebar_position: 1
+---
+
 # Username Nodes
 
-Usernames 
-[EIP-1155](https://eips.ethereum.org/EIPS/eip-1155) based with additional peristent state.  No event indexing required, nft ids and usernames are reverse mapped on chain. (Address => nftids[]) still requires inferring state from event logs)
+Usernames are [EIP-1155](https://eips.ethereum.org/EIPS/eip-1155) based with additional peristent state.  No event indexing required, nft ids and usernames are reverse mapped on chain. (Address => nftids[]) still requires inferring state from event logs)
 ```
   mapping(string => uint256) usernameToNftId;
   mapping(uint256 => string) nftIdToUsername;

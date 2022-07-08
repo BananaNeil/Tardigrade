@@ -1,4 +1,8 @@
+---
+sidebar_position: 2
+---
 # Group Tip Chain
+
 Many users can chain tips together for many other users
 
 ## Message

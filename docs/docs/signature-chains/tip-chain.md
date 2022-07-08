@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Tip Chain
 Many users can chain tips together to one other user.  
 ## Message

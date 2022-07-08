@@ -1,8 +1,8 @@
 {
   "label": "Social Graph",
-  "position": 3,
+  "position": 2,
   "link": {
     "type": "generated-index",
-    "description": "5 minutes to learn the most important Docusaurus concepts."
+    "description": "By design, the most rudimentary social network graph is instantiated on the blockchain.  It is pricy, but it is persistent, and enables the highest degree of composability with cryptographic value primitives.  Combined with the Signature Chain, Tardigrade sees a greater than parts ecosystem emerge for reputation based efficiency capitalization.  An area of keen open research is the possibility of ZKSnarking elements or the entirity of the graph, and detailing what privacy benefits would be and what they would mean for users"
   }
 }

@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Tardigrade: Orbital Meshnet',
-  tagline: 'ZKSnarked Social Graph | Timelock Signature Chaining | IPFS Pubsub',
+  tagline: 'Ethereum Social Graph | IPFS Pubsub EIP-712 Micropayments | Defi Metagames',
   url: 'https://github.com/tardigrade-social',
   baseUrl: '/',
   onBrokenLinks: 'throw',

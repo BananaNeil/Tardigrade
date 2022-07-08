@@ -1,4 +1,8 @@
+---
+sidebar_position: 3
+---
 # Merkle Tip Chain
+
 ## Message
 ```
 struct MerkleTip {
