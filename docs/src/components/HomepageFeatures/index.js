@@ -12,7 +12,7 @@ const FeatureList = [
     imgSrc: '/img/tardigrade-ethereum.png',
     description: (
       <>
-        Tardigrade puts a social graph on a blockchain to help keep a users network persistent across platforms and to enable composability with cryptographic primitives.
+        Tardigrade puts the most rudimentary of social graphs on a blockchain to help keep a users network persistent across platforms and to enable composability with cryptographic primitives.  It is the aspiration to explore zero knowledge circuits in the creation of privacy centric social graphs. 
       </>
     ),
   },
