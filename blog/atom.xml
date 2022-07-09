@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://github.com/tardigrade-social/blog</id>
+    <title>Tardigrade: Orbital Meshnet Blog</title>
+    <updated>2021-08-26T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://github.com/tardigrade-social/blog"/>
+    <subtitle>Tardigrade: Orbital Meshnet Blog</subtitle>
+    <icon>https://github.com/tardigrade-social/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>welcome</id>
+        <link href="https://github.com/tardigrade-social/blog/welcome"/>
+        <updated>2021-08-26T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[You've reached the blog for Tardigrade: Orbital Meshnet.]]></summary>
+        <content type="html"><![CDATA[<p>You've reached the blog for Tardigrade: Orbital Meshnet.</p><p><img loading="lazy" alt="tardigrade-banner" src="/assets/images/tardigrade-banner-3-8b72828d961b3e238cd2a4a2ef57c2f3.png" width="1800" height="600" class="img_ev3q"></p><p>The blog supports tags as well!</p>]]></content>
+        <author>
+            <name>Taylor Hulsmans</name>
+            <uri>https://github.com/taylorhulsmans</uri>
+        </author>
+        <category label="CAW" term="CAW"/>
+        <category label="Cawdrivium" term="Cawdrivium"/>
+        <category label="Tardigarde" term="Tardigarde"/>
+        <category label="Decentralized Social Media" term="Decentralized Social Media"/>
+        <category label="docusaurus" term="docusaurus"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[The Freshest Slice]]></title>
+        <id>mdx-blog-post</id>
+        <link href="https://github.com/tardigrade-social/blog/mdx-blog-post"/>
+        <updated>2021-08-01T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Tardigrade is Typescript ethers.js hardhat, react-web3 beta, orbit-db.]]></summary>
+        <content type="html"><![CDATA[<p>Tardigrade is Typescript ethers.js hardhat, react-web3 beta, orbit-db.</p>]]></content>
+        <author>
+            <name>Taylor Hulsmans</name>
+            <uri>https://github.com/taylorhulsmans</uri>
+        </author>
+        <category label="ethers.js" term="ethers.js"/>
+        <category label="hardhat" term="hardhat"/>
+        <category label="web3" term="web3"/>
+        <category label="web3js" term="web3js"/>
+        <category label="ganache-cli" term="ganache-cli"/>
+        <category label="react-web3" term="react-web3"/>
+        <category label="docusaurus" term="docusaurus"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Focalization- Finding the target, Collectively]]></title>
+        <id>long-blog-post</id>
+        <link href="https://github.com/tardigrade-social/blog/long-blog-post"/>
+        <updated>2019-05-29T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Sometimes all it takes to benefit off a secret is that it shared, and sometimes it is the work of great collective analysis that direction to the most confounding narratives,]]></summary>
+        <content type="html"><![CDATA[<p>Sometimes all it takes to benefit off a secret is that it shared, and sometimes it is the work of great collective analysis that direction to the most confounding narratives, </p><p> Central to an entreprenur delivering a better than market price rests at some point researching and creating knowledge.  If a connection to a better price is found, but unable to be potentiated due to insufficient transmission media than it obviates the nessesity to assess the infrastructure.  A recurring pattern is what I'm come to define as baggage of a medium.   To issue a statement from a tweet is to first and for most say 'twitter' itself.  Following the example, if there was high value add information being computationally and algorithmically censored, and one were to diagose the cause for censorship to be 'cant risk brand image on (insert array of wrongthink)' than naturally entreprenurs would attempt to ship around it. </p><p>Context is often key, and is found elucidated in an ideas tradition, a tradition composed by the potentiations of that idea.  The risk and cost of finding a better price for something can than be conducted in group formation</p>]]></content>
+        <author>
+            <name>Taylor Hulsmans</name>
+            <uri>https://github.com/taylorhulsmans</uri>
+        </author>
+        <category label="EIP-2535" term="EIP-2535"/>
+        <category label="EIP-712" term="EIP-712"/>
+        <category label="EIP-1155" term="EIP-1155"/>
+        <category label="Orbitdb" term="Orbitdb"/>
+        <category label="IPFS" term="IPFS"/>
+        <category label="Zksnark" term="Zksnark"/>
+        <category label="docusaurus" term="docusaurus"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Backlog A- Intrinsic Value Thesis for Digital Media]]></title>
+        <id>backlog-intrinsic-value-thesis</id>
+        <link href="https://github.com/tardigrade-social/blog/backlog-intrinsic-value-thesis"/>
+        <updated>2019-05-28T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[As the saying goes, secrets form the fountain of profit, and The Intrinsic Value Thesis for Digital Media,]]></summary>
+        <content type="html"><![CDATA[<p>As the saying goes, secrets form the fountain of profit, and <a href="https://intrinsicresearch.substack.com/p/intrinsic-value-model-for-digital?s=r" target="_blank" rel="noopener noreferrer">The Intrinsic Value Thesis for Digital Media</a>,
+characterizes the economics of finding such things out quite profitably. Information, its sharing and creation, is at the heart of entrepenurship. It concerns itself with deriving value from ideas that precurse a monetary payback.  Incentivizing such content than, will naturally struggle to be monetary in nature.  Tardigrade, than, envisions a toolset to become collectively creative in manifesting entrepenurial knowledge networks.</p>]]></content>
+        <author>
+            <name>Taylor Hulsmans</name>
+            <uri>https://github.com/taylorhulsmans</uri>
+        </author>
+        <category label="Ethereum" term="Ethereum"/>
+        <category label="Solidity" term="Solidity"/>
+        <category label="CAW" term="CAW"/>
+        <category label="Cawdrivium" term="Cawdrivium"/>
+        <category label="Tardigrade" term="Tardigrade"/>
+    </entry>
+</feed>

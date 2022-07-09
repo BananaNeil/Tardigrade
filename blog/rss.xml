@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Tardigrade: Orbital Meshnet Blog</title>
+        <link>https://github.com/tardigrade-social/blog</link>
+        <description>Tardigrade: Orbital Meshnet Blog</description>
+        <lastBuildDate>Thu, 26 Aug 2021 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[Welcome]]></title>
+            <link>https://github.com/tardigrade-social/blog/welcome</link>
+            <guid>welcome</guid>
+            <pubDate>Thu, 26 Aug 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[You've reached the blog for Tardigrade: Orbital Meshnet.]]></description>
+            <content:encoded><![CDATA[<p>You've reached the blog for Tardigrade: Orbital Meshnet.</p><p><img loading="lazy" alt="tardigrade-banner" src="/assets/images/tardigrade-banner-3-8b72828d961b3e238cd2a4a2ef57c2f3.png" width="1800" height="600" class="img_ev3q"></p><p>The blog supports tags as well!</p>]]></content:encoded>
+            <category>CAW</category>
+            <category>Cawdrivium</category>
+            <category>Tardigarde</category>
+            <category>Decentralized Social Media</category>
+            <category>docusaurus</category>
+        </item>
+        <item>
+            <title><![CDATA[The Freshest Slice]]></title>
+            <link>https://github.com/tardigrade-social/blog/mdx-blog-post</link>
+            <guid>mdx-blog-post</guid>
+            <pubDate>Sun, 01 Aug 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[Tardigrade is Typescript ethers.js hardhat, react-web3 beta, orbit-db.]]></description>
+            <content:encoded><![CDATA[<p>Tardigrade is Typescript ethers.js hardhat, react-web3 beta, orbit-db.</p>]]></content:encoded>
+            <category>ethers.js</category>
+            <category>hardhat</category>
+            <category>web3</category>
+            <category>web3js</category>
+            <category>ganache-cli</category>
+            <category>react-web3</category>
+            <category>docusaurus</category>
+        </item>
+        <item>
+            <title><![CDATA[Focalization- Finding the target, Collectively]]></title>
+            <link>https://github.com/tardigrade-social/blog/long-blog-post</link>
+            <guid>long-blog-post</guid>
+            <pubDate>Wed, 29 May 2019 00:00:00 GMT</pubDate>
+            <description><![CDATA[Sometimes all it takes to benefit off a secret is that it shared, and sometimes it is the work of great collective analysis that direction to the most confounding narratives,]]></description>
+            <content:encoded><![CDATA[<p>Sometimes all it takes to benefit off a secret is that it shared, and sometimes it is the work of great collective analysis that direction to the most confounding narratives, </p><p> Central to an entreprenur delivering a better than market price rests at some point researching and creating knowledge.  If a connection to a better price is found, but unable to be potentiated due to insufficient transmission media than it obviates the nessesity to assess the infrastructure.  A recurring pattern is what I'm come to define as baggage of a medium.   To issue a statement from a tweet is to first and for most say 'twitter' itself.  Following the example, if there was high value add information being computationally and algorithmically censored, and one were to diagose the cause for censorship to be 'cant risk brand image on (insert array of wrongthink)' than naturally entreprenurs would attempt to ship around it. </p><p>Context is often key, and is found elucidated in an ideas tradition, a tradition composed by the potentiations of that idea.  The risk and cost of finding a better price for something can than be conducted in group formation</p>]]></content:encoded>
+            <category>EIP-2535</category>
+            <category>EIP-712</category>
+            <category>EIP-1155</category>
+            <category>Orbitdb</category>
+            <category>IPFS</category>
+            <category>Zksnark</category>
+            <category>docusaurus</category>
+        </item>
+        <item>
+            <title><![CDATA[Backlog A- Intrinsic Value Thesis for Digital Media]]></title>
+            <link>https://github.com/tardigrade-social/blog/backlog-intrinsic-value-thesis</link>
+            <guid>backlog-intrinsic-value-thesis</guid>
+            <pubDate>Tue, 28 May 2019 00:00:00 GMT</pubDate>
+            <description><![CDATA[As the saying goes, secrets form the fountain of profit, and The Intrinsic Value Thesis for Digital Media,]]></description>
+            <content:encoded><![CDATA[<p>As the saying goes, secrets form the fountain of profit, and <a href="https://intrinsicresearch.substack.com/p/intrinsic-value-model-for-digital?s=r" target="_blank" rel="noopener noreferrer">The Intrinsic Value Thesis for Digital Media</a>,
+characterizes the economics of finding such things out quite profitably. Information, its sharing and creation, is at the heart of entrepenurship. It concerns itself with deriving value from ideas that precurse a monetary payback.  Incentivizing such content than, will naturally struggle to be monetary in nature.  Tardigrade, than, envisions a toolset to become collectively creative in manifesting entrepenurial knowledge networks.</p>]]></content:encoded>
+            <category>Ethereum</category>
+            <category>Solidity</category>
+            <category>CAW</category>
+            <category>Cawdrivium</category>
+            <category>Tardigrade</category>
+        </item>
+    </channel>
+</rss>

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[912],{7645:a=>{a.exports=JSON.parse('{"label":"ganache-cli","permalink":"/blog/tags/ganache-cli","allTagsPath":"/blog/tags","count":1}')}}]);

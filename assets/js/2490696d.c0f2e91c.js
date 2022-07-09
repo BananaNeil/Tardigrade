@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[8672],{2811:a=>{a.exports=JSON.parse('{"label":"Cawdrivium","permalink":"/blog/tags/cawdrivium","allTagsPath":"/blog/tags","count":2}')}}]);

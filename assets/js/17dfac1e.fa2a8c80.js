@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[772],{7670:s=>{s.exports=JSON.parse('{"label":"IPFS","permalink":"/blog/tags/ipfs","allTagsPath":"/blog/tags","count":1}')}}]);
