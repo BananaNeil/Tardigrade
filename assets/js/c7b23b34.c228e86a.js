@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[2406],{3245:e=>{e.exports=JSON.parse('{"label":"Ethereum","permalink":"/Tardigrade/blog/tags/ethereum","allTagsPath":"/Tardigrade/blog/tags","count":1}')}}]);

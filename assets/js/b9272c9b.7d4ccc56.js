@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[9089],{6955:a=>{a.exports=JSON.parse('{"label":"Solidity","permalink":"/Tardigrade/blog/tags/solidity","allTagsPath":"/Tardigrade/blog/tags","count":1}')}}]);

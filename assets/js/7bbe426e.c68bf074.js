@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[1915],{8617:e=>{e.exports=JSON.parse('{"label":"react-web3","permalink":"/blog/tags/react-web-3","allTagsPath":"/blog/tags","count":1}')}}]);

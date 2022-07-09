@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[8737],{1076:a=>{a.exports=JSON.parse('{"label":"Cawdrivium","permalink":"/Tardigrade/blog/tags/cawdrivium","allTagsPath":"/Tardigrade/blog/tags","count":2}')}}]);

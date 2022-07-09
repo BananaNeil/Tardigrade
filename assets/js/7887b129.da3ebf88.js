@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[5196],{4189:s=>{s.exports=JSON.parse('{"label":"EIP-712","permalink":"/blog/tags/eip-712","allTagsPath":"/blog/tags","count":1}')}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[9586],{7470:a=>{a.exports=JSON.parse('{"label":"EIP-712","permalink":"/Tardigrade/blog/tags/eip-712","allTagsPath":"/Tardigrade/blog/tags","count":1}')}}]);

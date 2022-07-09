@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[5614],{7503:a=>{a.exports=JSON.parse('{"label":"IPFS","permalink":"/Tardigrade/blog/tags/ipfs","allTagsPath":"/Tardigrade/blog/tags","count":1}')}}]);

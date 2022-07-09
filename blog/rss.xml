@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>Tardigrade: Orbital Meshnet Blog</title>
-        <link>https://github.com/tardigrade-social/blog</link>
+        <link>https://github.com/tardigrade-social/Tardigrade/blog</link>
         <description>Tardigrade: Orbital Meshnet Blog</description>
         <lastBuildDate>Thu, 26 Aug 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
@@ -10,11 +10,11 @@
         <language>en</language>
         <item>
             <title><![CDATA[Welcome]]></title>
-            <link>https://github.com/tardigrade-social/blog/welcome</link>
+            <link>https://github.com/tardigrade-social/Tardigrade/blog/welcome</link>
             <guid>welcome</guid>
             <pubDate>Thu, 26 Aug 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[You've reached the blog for Tardigrade: Orbital Meshnet.]]></description>
-            <content:encoded><![CDATA[<p>You've reached the blog for Tardigrade: Orbital Meshnet.</p><p><img loading="lazy" alt="tardigrade-banner" src="/assets/images/tardigrade-banner-3-8b72828d961b3e238cd2a4a2ef57c2f3.png" width="1800" height="600" class="img_ev3q"></p><p>The blog supports tags as well!</p>]]></content:encoded>
+            <content:encoded><![CDATA[<p>You've reached the blog for Tardigrade: Orbital Meshnet.</p><p><img loading="lazy" alt="tardigrade-banner" src="/Tardigrade/assets/images/tardigrade-banner-3-8b72828d961b3e238cd2a4a2ef57c2f3.png" width="1800" height="600" class="img_ev3q"></p><p>The blog supports tags as well!</p>]]></content:encoded>
             <category>CAW</category>
             <category>Cawdrivium</category>
             <category>Tardigarde</category>
@@ -23,7 +23,7 @@
         </item>
         <item>
             <title><![CDATA[The Freshest Slice]]></title>
-            <link>https://github.com/tardigrade-social/blog/mdx-blog-post</link>
+            <link>https://github.com/tardigrade-social/Tardigrade/blog/mdx-blog-post</link>
             <guid>mdx-blog-post</guid>
             <pubDate>Sun, 01 Aug 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[Tardigrade is Typescript ethers.js hardhat, react-web3 beta, orbit-db.]]></description>
@@ -38,7 +38,7 @@
         </item>
         <item>
             <title><![CDATA[Focalization- Finding the target, Collectively]]></title>
-            <link>https://github.com/tardigrade-social/blog/long-blog-post</link>
+            <link>https://github.com/tardigrade-social/Tardigrade/blog/long-blog-post</link>
             <guid>long-blog-post</guid>
             <pubDate>Wed, 29 May 2019 00:00:00 GMT</pubDate>
             <description><![CDATA[Sometimes all it takes to benefit off a secret is that it shared, and sometimes it is the work of great collective analysis that direction to the most confounding narratives,]]></description>
@@ -53,7 +53,7 @@
         </item>
         <item>
             <title><![CDATA[Backlog A- Intrinsic Value Thesis for Digital Media]]></title>
-            <link>https://github.com/tardigrade-social/blog/backlog-intrinsic-value-thesis</link>
+            <link>https://github.com/tardigrade-social/Tardigrade/blog/backlog-intrinsic-value-thesis</link>
             <guid>backlog-intrinsic-value-thesis</guid>
             <pubDate>Tue, 28 May 2019 00:00:00 GMT</pubDate>
             <description><![CDATA[As the saying goes, secrets form the fountain of profit, and The Intrinsic Value Thesis for Digital Media,]]></description>

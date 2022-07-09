@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[4228],{267:a=>{a.exports=JSON.parse('{"label":"ganache-cli","permalink":"/Tardigrade/blog/tags/ganache-cli","allTagsPath":"/Tardigrade/blog/tags","count":1}')}}]);

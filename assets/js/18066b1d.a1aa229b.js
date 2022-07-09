@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[9088],{4607:a=>{a.exports=JSON.parse('{"label":"Tardigarde","permalink":"/blog/tags/tardigarde","allTagsPath":"/blog/tags","count":1}')}}]);

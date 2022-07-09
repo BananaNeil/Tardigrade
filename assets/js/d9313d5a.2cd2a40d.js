@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[5804],{1557:a=>{a.exports=JSON.parse('{"label":"Decentralized Social Media","permalink":"/Tardigrade/blog/tags/decentralized-social-media","allTagsPath":"/Tardigrade/blog/tags","count":1}')}}]);

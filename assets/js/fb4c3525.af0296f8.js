@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[5536],{7753:s=>{s.exports=JSON.parse('{"label":"ethers.js","permalink":"/Tardigrade/blog/tags/ethers-js","allTagsPath":"/Tardigrade/blog/tags","count":1}')}}]);

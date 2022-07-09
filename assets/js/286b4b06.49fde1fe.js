@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[8969],{8927:e=>{e.exports=JSON.parse('{"label":"Decentralized Social Media","permalink":"/blog/tags/decentralized-social-media","allTagsPath":"/blog/tags","count":1}')}}]);

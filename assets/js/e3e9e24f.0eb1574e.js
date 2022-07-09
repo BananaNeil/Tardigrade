@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[3948],{3609:a=>{a.exports=JSON.parse('{"label":"web3js","permalink":"/Tardigrade/blog/tags/web-3-js","allTagsPath":"/Tardigrade/blog/tags","count":1}')}}]);
