@@ -9,7 +9,7 @@ const config = {
   title: 'Tardigrade: Orbital Meshnet',
   tagline: 'Ethereum Social Graph | IPFS Pubsub EIP-712 Micropayments | Defi Metagames',
   url: 'https://github.com/tardigrade-social',
-  baseUrl: '/',
+  baseUrl: '/Tardigrade/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',

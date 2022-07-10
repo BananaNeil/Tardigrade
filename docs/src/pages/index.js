@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <Layout
       title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      description="Ethereum Social Graph | IPFS Pubsub EIP-712 Micropayments | Defi Metagames">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

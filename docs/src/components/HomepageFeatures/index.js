@@ -19,11 +19,11 @@ const FeatureList = [
   {
     title: 'IPFS Pubsub EIP-712 Micropayments',
     subTitle: 'Gasless micropayments for many, one incentived gasful tx.',
+    imgSrc: '/img/tardigrade-network.png',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    imgSrc: '/img/tardigrade-modular.png',
     description: (
       <>
-        Tardigrade uses token timelocks and IPFS pubsub EIP-712 message chaining to enable gassless micropayments to be chained together for another user to consumer before the deadline expires.
+        Tardigrade uses token timelocks and IPFS pubsub EIP-712 message chaining to enable gassless micropayments to be chained together for another user to consume before the deadline expires.
       </>
     ),
   },
@@ -31,9 +31,9 @@ const FeatureList = [
     title: 'Defi Metagames',
     subTitle: 'Composability | Competition | Journey to Undercollateralization',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    imgSrc: '/img/tardigrade-network.png',
+    imgSrc: '/img/tardigrade-modular.png',
     description: (
-      <>Together Combined exposes an ability to temporarily and pragmatically break the security and speed portion of the blockchain security trilemma. It enables web3 equivalents of things like tip jars, honour boxes, and hopefully one day Collateralization rates under 100%.</>    ),
+      <>Together Combined, they expose an ability to temporarily and pragmatically break the security and speed portion of the blockchain security trilemma. It enables web3 equivalents of things like tip jars, honour boxes, and hopefully one day Collateralization rates under 100%.</>    ),
   },
 ];
 
