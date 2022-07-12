@@ -1,7 +1,8 @@
 /* global ethers */
 /* eslint prefer-const: "off" */
-
+const fs = require('fs')
 const { getSelectors, FacetCutAction } = require('./libraries/diamond.js')
+const ReceiverPaysFacet = require('../artifacts/contracts/facets/ReceiverPaysFacet.sol/ReceiverPaysFacet.json')
 
 async function deployDiamond () {
   const accounts = await ethers.getSigners()
@@ -94,6 +95,16 @@ async function deployDiamond () {
     throw Error(`Diamond upgrade failed: ${tx.hash}`)
   }
   console.log('Completed diamond cut')
+  fs.writeFileSync('../orbit-db/static/Static.json',JSON.stringify({
+    diamondAddress: diamond.address,
+    receiverPaysFacetAbi: ReceiverPaysFacet.abi
+  }), (err) => {
+    if (err) {
+      throw err
+    } else {
+      console.log('Diamond Address Written to orbitdb directory')
+    }
+  })
   return {
     'diamond': diamond.address,
     'caw': caw.address,
