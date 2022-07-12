@@ -38,4 +38,4 @@ artifacts/
 typechain/
 
 
-static/
+orbit-db/static/Static.json
