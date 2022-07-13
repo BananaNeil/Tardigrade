@@ -3,6 +3,7 @@
 const fs = require('fs')
 const { getSelectors, FacetCutAction } = require('./libraries/diamond.js')
 const ReceiverPaysFacet = require('../artifacts/contracts/facets/ReceiverPaysFacet.sol/ReceiverPaysFacet.json')
+const UsernameFacet = require('../artifacts/contracts/facets/UsernameFacet.sol/UsernameFacet.json')
 
 async function deployDiamond () {
   const accounts = await ethers.getSigners()
@@ -97,7 +98,8 @@ async function deployDiamond () {
   console.log('Completed diamond cut')
   fs.writeFileSync('../orbit-db/static/Static.json',JSON.stringify({
     diamondAddress: diamond.address,
-    receiverPaysFacetAbi: ReceiverPaysFacet.abi
+    receiverPaysFacetAbi: ReceiverPaysFacet.abi,
+    usernameFacetAbi: UsernameFacet.abi
   }), (err) => {
     if (err) {
       throw err

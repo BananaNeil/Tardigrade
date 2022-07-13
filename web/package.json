@@ -32,7 +32,8 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.3.0",
     "recharts": "^2.1.9",
-    "truncate-eth-address": "^1.0.2"
+    "truncate-eth-address": "^1.0.2",
+    "tardigrade": "../orbit-db"
   },
   "devDependencies": {
     "@types/node": "^17.0.33",
