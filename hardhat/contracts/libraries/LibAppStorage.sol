@@ -80,7 +80,7 @@ struct AppStorage {
   mapping(address => mapping(address => bool)) operatorApprovals;
   string uri;
   // signature sends
-  // nftid => nonce => true
+  // nftid => nonce
   mapping(uint256 => uint256)  nftIdUsedNonces;
   mapping(uint256 => uint256) nftIdCawDeposits;
   // StakePool

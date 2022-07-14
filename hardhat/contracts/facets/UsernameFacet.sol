@@ -237,5 +237,10 @@ contract UsernameFacet is IERC1155, Modifiers {
     return s.usernameToNftId[username];
   }
 
+  function getLastUsedNonce(uint256 nftId) external view returns (uint256) {
+    AppStorage storage s = LibAppStorage.diamondStorage();
+    return s.nftIdUsedNonces[nftId];
+  }
+
 
 }
