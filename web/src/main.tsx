@@ -11,11 +11,13 @@ import { Web3ReactProvider, Web3ReactHooks  } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { hooks as metaMaskHooks, metaMask } from './connectors/metaMask'
 
+import SignUp from './components/sign-up/SignUp'
 import {
   BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
+
 
 
 const connectors: [MetaMask, Web3ReactHooks][] = [
@@ -29,7 +31,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <CssBaseline enableColorScheme />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<App />} />
+              <Route path="/" element={<App />}>
+                <Route path="signup" element={<SignUp />} />
+              </Route>
             </Routes>
           </BrowserRouter>
       </ThemeProvider>

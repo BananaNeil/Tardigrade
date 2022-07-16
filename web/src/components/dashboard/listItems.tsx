@@ -10,14 +10,44 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
-export const mainListItems = (
+
+export const MainListItems = ({handleSideNav}) => {
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const handleListItemClick = (index:number) => {
+    setSelectedIndex(index)
+  }
+  const navItems = [
+    {
+      primary: "Dashboard",
+      icon: (<DashboardIcon />),
+      route: '/',
+    },
+    {
+      primary: "Add Username",
+      icon: (<PeopleIcon />),
+      route: '/signup',
+    },
+  ].map((item, i) => {
+    return (
+      <ListItemButton
+        key={i}
+        selected={selectedIndex === i}
+        onClick={() => {
+        handleSideNav(item.route)
+        handleListItemClick(i)
+        }}
+      >
+        <ListItemIcon>
+          {item.icon}
+        </ListItemIcon>
+        <ListItemText primary={item.primary} />
+      </ListItemButton>
+    )
+  })
+
+  return (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItemButton>
+    {navItems}
     <ListItemButton>
       <ListItemIcon>
         <ShoppingCartIcon />
@@ -43,7 +73,7 @@ export const mainListItems = (
       <ListItemText primary="Integrations" />
     </ListItemButton>
   </React.Fragment>
-);
+)};
 
 export const secondaryListItems = (
   <React.Fragment>

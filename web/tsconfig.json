@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl":"src",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,

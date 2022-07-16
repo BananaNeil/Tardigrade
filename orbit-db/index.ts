@@ -160,7 +160,6 @@ class Tardigrade {
         dbUrl: userUrl,
         db: userDb,
         profile: profile
-        
       }
       
     }
