@@ -12,6 +12,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { hooks as metaMaskHooks, metaMask } from './connectors/metaMask'
 
 import SignUp from './components/sign-up/SignUp'
+import {Overview} from './components/dashboard/Overview'
 import {
   BrowserRouter,
   Routes,

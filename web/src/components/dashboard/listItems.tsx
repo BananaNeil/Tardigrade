@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useLocation} from 'react-router-dom';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -12,7 +13,8 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 
 
 export const MainListItems = ({handleSideNav}) => {
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  let location = useLocation()
   const handleListItemClick = (index:number) => {
     setSelectedIndex(index)
   }
@@ -21,17 +23,20 @@ export const MainListItems = ({handleSideNav}) => {
       primary: "Dashboard",
       icon: (<DashboardIcon />),
       route: '/',
+      selectedIndex: 0
     },
     {
       primary: "Add Username",
       icon: (<PeopleIcon />),
       route: '/signup',
+      selectedIndex: 1
     },
-  ].map((item, i) => {
+  ]
+  const navItemComponents = navItems.map((item, i) => {
     return (
       <ListItemButton
         key={i}
-        selected={selectedIndex === i}
+        selected={selectedIndex === item.selectedIndex}
         onClick={() => {
         handleSideNav(item.route)
         handleListItemClick(i)
@@ -45,9 +50,15 @@ export const MainListItems = ({handleSideNav}) => {
     )
   })
 
+  React.useEffect(() => {
+    const navItem = navItems.find((item) => item.route === location.pathname)
+    setSelectedIndex(navItem ? navItem.selectedIndex: 0)
+  }, [location])
+
   return (
   <React.Fragment>
-    {navItems}
+    {navItemComponents}
+    {/*
     <ListItemButton>
       <ListItemIcon>
         <ShoppingCartIcon />
@@ -72,6 +83,7 @@ export const MainListItems = ({handleSideNav}) => {
       </ListItemIcon>
       <ListItemText primary="Integrations" />
     </ListItemButton>
+    */}
   </React.Fragment>
 )};
 
