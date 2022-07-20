@@ -2,10 +2,11 @@
   "name": "tardigrade",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/bundle.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc index.ts --watch --outDir ./lib"
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC",
@@ -13,12 +14,15 @@
     "@metamask/eth-sig-util": "^4.0.1",
     "ethers": "^5.6.9",
     "ipfs": "^0.63.5",
+    "node-polyfill-webpack-plugin": "^2.0.0",
     "orbit-db": "^0.28.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/node": "^18.0.3",
+    "ts-loader": "^9.3.1",
     "ts-node": "^10.8.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "webpack-cli": "^4.10.0"
   }
 }

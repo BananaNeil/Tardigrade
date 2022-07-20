@@ -1,9 +1,10 @@
 # Tardigrade
 ![](https://github.com/tardigrade-social/Tardigrade/blob/master/docs/static/img/tardigrade-logo.png)
 
+[discord](https://discord.gg/BUJaYAFxRr)
+
 Inspired by [Caw](https://www.reddit.com/r/SatoshiStreetBets/duplicates/up121h/caw_white_paper_decentralized_social_network/), Tardigrade is a pure utilitarian vision of the manifesto.  Token agnostic, Username nodes with connections' vertices, attempts at Zero Knowledge proofs, Deposit box timelocking, IPFS pubsub signature chaining and harvesting, a call to social media tech stack composability and competition, Tardigrade.social attempts to focalize the share desired for a decentralized social media into an ecosystem that brings control of the media back the inot the users and its creators hands.
 
-[discord](https://discord.gg/BUJaYAFxRr)
 
 ## About
 ### Tardigrade

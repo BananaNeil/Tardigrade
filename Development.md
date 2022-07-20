@@ -31,9 +31,15 @@ The `deployDiamond()` function is found in the `./scripts/deploy.js` file.  This
 The message signing vertical slice is not yet set in stone. the [ethers._signTypedData](https://docs.ethers.io/v5/api/signer/#Signer-signTypedData) function is still experimental.  And with the added typescript constraint it is creating alot of extra gronk.  But generally message passing can be learnt from [EIP-712](https://eips.ethereum.org/EIPS/eip-712)
 
 
-
-
-
+## Web
+`npm install ganache --location=global`
+`cp ./hardhat/.env.example ./hardhat/.env`
+match mnemonic with metamask 
+:::warning
+ganache plaintexts your private keys and tmux script will bash history your mnemonic
+:::
+`ganache -i 1337 -m ${MEMNONIC}`
+`cd hardhat && npx hardhat run ./scripts/deploy.js --network ganache`
 
 
 

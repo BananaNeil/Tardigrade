@@ -1,8 +1,8 @@
-const IPFS = require('ipfs')
+import IPFS from 'ipfs'
 const OrbitDB = require('orbit-db')
 const { ethers } = require('ethers')
 const fs = require('fs')
-const Static = require('./static/Static.json')
+const Static = require('../static/Static.json')
 import {
   encrypt,
   recoverPersonalSignature,
@@ -28,7 +28,7 @@ interface UserProfile {
   internalNonce: number;
 }
 
-class Tardigrade {
+export class Tardigrade {
   name:string;
   ipfs:any;
   orbitdb:any;
@@ -38,7 +38,7 @@ class Tardigrade {
   receiverPaysFacet:any;
   usernameFacet:any;
   user: User;
-  tipChains:object[];
+  tipChains:object[] = [];
   domain:object;
   types: MessageTypes = {
     EIP712Domain: [
@@ -84,40 +84,46 @@ class Tardigrade {
     name:string,
     provider:object,
     diamondAddress:string,
-    initialTipChains?:object[],
-    username?:string
+    ipfs: any,
+    orbitdb: any,
+    chainId: string,
   ) {
-    return (async (): Promise<void> => {
-      this.name = name
-      this.diamondAddress = diamondAddress
-      this.tipChains = initialTipChains ? initialTipChains : [{}]
+    this.name = name
+    this.diamondAddress = diamondAddress
+    this.ipfs = ipfs
+    this.orbitdb = orbitdb
+    this.provider = provider
+    this.signer = this.provider.getSigner()
+    this.receiverPaysFacet = ethers.Contract(diamondAddress, Static.receiverPaysFacet.abi, this.signer)
+    this.usernameFacet = ethers.Contract(diamondAddress, Static.usernameFacet.abi, this.signer)
+    this.domain = {
+      chainId: chainId,
+      name: name,
+      verifyingContract: diamondAddress,
+      version: '1'
+    }
+  };
+
+  public static async build(
+    name: string,
+    provider: any,
+    diamondAddress: string,
+    username?: string
+  ): Promise<Tardigrade> {
       const ipfsOptions = { 
         repo : './ipfs',
         EXPERIMENTAL: {
           pubsub: true
         }
       }
-      this.ipfs =  await IPFS.create(ipfsOptions)
-      this.orbitdb = await OrbitDB.createInstance(this.ipfs)
-      this.provider = provider
-      this.signer = this.provider.getSigner()
-      this.receiverPaysFacet = ethers.Contract(diamondAddress, Static.receiverPaysFacet.abi, this.signer)
-      this.usernameFacet = ethers.Contract(diamondAddress, Static.usernameFacet.abi, this.signer)
-      if (username) {
-        await this.setUserContext(username)
-      }
-      this.domain = {
-        chainId: (await this.provider.getNetwork()).chainId,
-        name: name,
-        verifyingContract: diamondAddress,
-        version: '1'
-      }
+      const ipfs =  await IPFS.create(ipfsOptions)
+      const orbitdb = await OrbitDB.createInstance(ipfs)
+      const chainId = (await provider.getNetwork()).chainId
 
-    }).call(this);
+    return new Tardigrade(name, provider, diamondAddress,ipfs, orbitdb, chainId )
+  }
 
-  };
-
-  async createUser(username) {
+  async createUser(username:string) {
     try {
       const createUser = await this.usernameFacet.connect(this.signer).createUser(username)
       await this.setUserContext(username)
@@ -126,7 +132,7 @@ class Tardigrade {
     }
   }
 
-  async setUserContext(username) {
+  async setUserContext(username:string) {
     // userdb keyvalue?
     let nftIdFromUsername;
     let addressFromNftId;
@@ -177,9 +183,9 @@ class Tardigrade {
     this.tipChains.push({url, db});
   }
 
-  async loadTipChainByIPFSAddress(tipChainIPFSAddress) {};
+  async loadTipChainByIPFSAddress(tipChainIPFSAddress:string) {};
 
-  async loadTipChainByUrl(url) {};
+  async loadTipChainByUrl(url:string) {};
 
   async getAndUpdateNonce() {
     const userDb = await this.orbitdb.open(this.user.dbUrl)
@@ -192,7 +198,11 @@ class Tardigrade {
 
     }
   }
-  async appendTipChain(url, senderNftId, nonce, amount) {
+  async appendTipChain(
+    url:string,
+    senderNftId:number,
+    nonce:number,
+    amount:number) {
     const db = await this.orbitdb.open(url)
     const tip = {
       senderNftId: this.user.profile.nftId,
@@ -210,17 +220,17 @@ class Tardigrade {
     })
   };
 
-  async consumeTipChain(url) {
+  async consumeTipChain(url:string) {
     const db = await this.orbitdb.open(url)
     const all = db.iterator({ limit: -1  })
       .collect()
-      .map((e) => e.payload.value)
+      .map((e:any) => e.payload.value)
     
     const message = {
       claimerNftId: all[0].claimerNftId,
       deadline: all[0].deadline,
-      tips: all.map((e) => e.tip),
-      tipSigs: all.map((e) => e.tipSigs)
+      tips: all.map((e:any) => e.tip),
+      tipSigs: all.map((e:any) => e.tipSigs)
     }
 
     const signature:string = await this.signer._signTypedData(
@@ -238,5 +248,4 @@ class Tardigrade {
   //async pinTipChains() {} does this exist in api?
 
 }
-
 
